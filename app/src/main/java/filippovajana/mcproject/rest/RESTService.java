@@ -3,7 +3,10 @@ package filippovajana.mcproject.rest;
 import android.app.Activity;
 import android.os.AsyncTask;
 
+import java.util.List;
+
 import filippovajana.mcproject.activity.LoginActivity;
+import filippovajana.mcproject.model.AppFriend;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -22,6 +25,7 @@ public class RESTService
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
 
@@ -32,8 +36,8 @@ public class RESTService
         return SESSION_TOKEN;
     }
 
-
-    public class LoginCheckTask extends AsyncTask<String, Void, Boolean >
+    //Login Activity
+    public class LoginCheckTask extends AsyncTask<String, Void, Boolean>
     {
 
         private LoginActivity _activity;
@@ -79,6 +83,31 @@ public class RESTService
             {
                 return false;
             }
+        }
+    }
+
+
+    //Friends Activity
+    public static List<AppFriend> getFollowedFriends()
+    {
+        return null;
+    }
+
+    private class GetFollowedFriendTask extends AsyncTask<Void, Void, List<AppFriend>>
+    {
+
+        @Override
+        protected List<AppFriend> doInBackground(Void... voids)
+        {
+            //call rest api
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<AppFriend> result)
+        {
+            //add items to app model
         }
     }
 }
