@@ -1,6 +1,5 @@
 package filippovajana.mcproject.rest;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 
 import java.util.List;
@@ -37,11 +36,11 @@ public class RESTService
     }
 
     //Login Activity
-    public class LoginCheckTask extends AsyncTask<String, Void, Boolean>
+    public class loginCheckTask extends AsyncTask<String, Void, Boolean>
     {
 
         private LoginActivity _activity;
-        public LoginCheckTask(LoginActivity activity)
+        public loginCheckTask(LoginActivity activity)
         {
             _activity = activity;
         }
@@ -55,7 +54,7 @@ public class RESTService
         @Override
         protected void onPostExecute(Boolean result)
         {
-            _activity.LoginCheckHandler(result);
+            _activity.loginCheckHandler(result);
         }
 
 
@@ -93,7 +92,7 @@ public class RESTService
         return null;
     }
 
-    private class GetFollowedFriendTask extends AsyncTask<Void, Void, List<AppFriend>>
+    private class getFollowedFriendTask extends AsyncTask<Void, Void, List<AppFriend>>
     {
 
         @Override
