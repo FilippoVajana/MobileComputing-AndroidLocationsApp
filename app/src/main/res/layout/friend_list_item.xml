@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.widget.RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <!-- Name -->
+        <TextView
+            android:id="@+id/textView_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="black"
+            android:text="Name"/>
+
+        <!-- Distance -->
+        <TextView
+            android:id="@+id/textView_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/textView_name"
+            android:layout_alignBaseline="@id/textView_name"
+            android:layout_marginLeft="8dp"
+            android:textSize="10dp"
+            android:text="(distance)"/>
+
+        <!-- Message -->
+        <TextView
+            android:id="@+id/textView_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textView_name"
+            android:textSize="12dp"
+            android:text="Message"/>
+
+
+
+    </android.widget.RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>
