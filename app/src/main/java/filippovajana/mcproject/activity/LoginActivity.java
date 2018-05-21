@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity
 
         //check credentials
         RESTService restService = new RESTService();
-        RESTService.loginCheckTask task = new RESTService().new loginCheckTask(this); //TODO: wrap AsyncTask into a method in RESTService
+        RESTService.LoginTask task = new RESTService().new LoginTask(this); //TODO: wrap AsyncTask into a method in RESTService
         task.execute(username, password);
     }
 

@@ -1,10 +1,15 @@
 package filippovajana.mcproject.model;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import filippovajana.mcproject.rest.RESTService;
 
 public class AppDataModel
 {
-    //singleton
+    private ArrayList<AppFriend> _friendsList;
+
+    //SINGLETON
     private static AppDataModel _instance;
     private AppDataModel()
     {
@@ -18,14 +23,41 @@ public class AppDataModel
     }
 
 
-    private ArrayList<AppFriend> _friendsList;
 
-    //list operations
-    private void buildModel(){}
-    private void addItem(AppFriend item){}
-    private void removeItem(AppFriend item){}
+    public ArrayList<AppFriend> get_friendsList()
+    {
+        synchronized (_friendsList)
+        {
+            updateFriendsList();
+            return _friendsList;
+        }
+    }
+
+    private void updateFriendsList()
+    {
+        //call rest API
+        RESTService service = new RESTService();
+        List<AppFriend> list = service.getFriendsList();
+
+        //empty list
+        _friendsList.removeAll(new ArrayList<>(_friendsList));
+
+        //fill list
+        for (AppFriend f : list)
+        {
+            _friendsList.add(f);
+        }
+
+    }
+
+    private void addItem(AppFriend item)
+    {}
+    private void removeItem(AppFriend item)
+    {}
     public AppFriend getItem(int position)
     {
-        return _friendsList.get(position);
+        return null;
     }
+
+
 }

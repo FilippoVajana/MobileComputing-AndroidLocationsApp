@@ -18,5 +18,5 @@ public interface EverywareLabAPI
                               @Field("password") String password);
 
     @GET("followed/")
-    Call<List<AppFriend>> getFollowedFriends(@Query("session_id") String sessionId);
+    Call<FriendsListResponse> getFollowedFriends(@Query("session_id") String sessionId);
 }
