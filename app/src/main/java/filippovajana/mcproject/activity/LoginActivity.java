@@ -1,5 +1,6 @@
 package filippovajana.mcproject.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ public class LoginActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //TODO: check for valid session_id
     }
 
     public void userLoginButton_onClick(View view)
@@ -32,12 +35,12 @@ public class LoginActivity extends AppCompatActivity
 
         //check credentials
         RESTService restService = new RESTService();
-        RESTService.LoginCheckTask task = new RESTService().new LoginCheckTask(this);
+        RESTService.LoginTask task = new RESTService().new LoginTask(this); //TODO: wrap AsyncTask into a method in RESTService
         task.execute(username, password);
     }
 
     //Login check result handler
-    public void LoginCheckHandler(Boolean result)
+    public void loginCheckHandler(Boolean result)
     {
         //display result
         TextView resultText = (TextView) findViewById(R.id.loginResult);
@@ -45,12 +48,21 @@ public class LoginActivity extends AppCompatActivity
         {
             resultText.setTextColor(Color.GREEN);
             resultText.setText("Successful");
+
+            //next page
+            navigateToFriendsActivity();
         }
         else
         {
             resultText.setTextColor(Color.RED);
             resultText.setText("Failed");
         }
+    }
+
+    private void navigateToFriendsActivity()
+    {
+        Intent navIntent = new Intent(this, FriendsActivity.class);
+        startActivity(navIntent);
     }
 
 }
