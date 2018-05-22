@@ -1,9 +1,15 @@
 package filippovajana.mcproject.rest;
 
-import android.app.Activity;
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import filippovajana.mcproject.activity.LoginActivity;
+import filippovajana.mcproject.model.AppFriend;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -15,6 +21,7 @@ public class RESTService
     private static final String BASE_URL = "https://ewserver.di.unimi.it/mobicomp/geopost/";
     private static String SESSION_TOKEN; //fv:fv
     private static Retrofit retrofit;
+    private static EverywareLabAPI apiService;
 
     public RESTService()
     {
@@ -22,9 +29,11 @@ public class RESTService
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-
+        //init api service
+        apiService = retrofit.create(EverywareLabAPI.class);
     }
 
     public static String getSessionToken()
@@ -32,12 +41,12 @@ public class RESTService
         return SESSION_TOKEN;
     }
 
-
-    public class LoginCheckTask extends AsyncTask<String, Void, Boolean >
+    //Login Activity
+    public class LoginTask extends AsyncTask<String, Void, Boolean>
     {
 
         private LoginActivity _activity;
-        public LoginCheckTask(LoginActivity activity)
+        public LoginTask(LoginActivity activity)
         {
             _activity = activity;
         }
@@ -47,21 +56,16 @@ public class RESTService
         {
             return checkLoginCredentials(params[0], params[1]);
         }
-
         @Override
         protected void onPostExecute(Boolean result)
         {
-            _activity.LoginCheckHandler(result);
+            _activity.loginCheckHandler(result);
         }
-
 
         private boolean checkLoginCredentials(String username, String password)
         {
-            //build api service
-            EverywareLabAPI apiService = retrofit.create(EverywareLabAPI.class);
-
             //build rest call
-            Call<String> call = apiService.getSessionId(username, password);
+            Call<String> call = RESTService.apiService.getSessionId(username, password);
 
             //execute call
             try
@@ -81,4 +85,41 @@ public class RESTService
             }
         }
     }
+
+
+
+
+    //Friends Activity
+    public List<AppFriend> getFriendsList()
+    {
+        //get session id
+        String sessioId = getSessionToken();
+
+        //build rest call
+        Call<FriendsListResponse> call = apiService.getFollowedFriends(sessioId);
+
+        //execute call
+        try
+        {
+            Response<FriendsListResponse> response = call.execute();
+
+            if (response.isSuccessful())
+            {
+                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "getFriendsList Successful");
+                return response.body().getFriendsList();
+            }
+            else
+            {
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "getFriendsList Failed");
+                return new ArrayList<>();
+            }
+
+        }catch (Exception e)
+        {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "getFriendsList Exception ");
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
 }
