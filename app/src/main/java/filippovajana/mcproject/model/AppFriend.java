@@ -1,5 +1,7 @@
 package filippovajana.mcproject.model;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 
 public class AppFriend
@@ -8,6 +10,7 @@ public class AppFriend
     private String username;
 
     @SerializedName("msg")
+    @Nullable
     private String message;
 
     @SerializedName("lat")
@@ -28,6 +31,8 @@ public class AppFriend
 
     public String getMessage()
     {
+        if (message == null)
+            message = "";
         return message;
     }
 

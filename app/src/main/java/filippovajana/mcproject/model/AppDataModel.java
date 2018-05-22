@@ -2,6 +2,8 @@ package filippovajana.mcproject.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import filippovajana.mcproject.rest.RESTService;
 
@@ -15,6 +17,7 @@ public class AppDataModel
     {
         _friendsList = new ArrayList<>();
     }
+
     public static AppDataModel getInstance()
     {
         if (_instance == null)
@@ -28,35 +31,40 @@ public class AppDataModel
     {
         synchronized (_friendsList)
         {
-            updateFriendsList();
             return _friendsList;
         }
     }
 
-    private void updateFriendsList()
+    public void updateFriendsList()
     {
         //call rest API
-        RESTService service = new RESTService();
-        List<AppFriend> list = service.getFriendsList();
+        RESTService rest = new RESTService();
+        List<AppFriend> list = rest.getFriendsList();
 
-        //empty list
-        _friendsList.removeAll(new ArrayList<>(_friendsList));
-
-        //fill list
-        for (AppFriend f : list)
+        //update list
+        synchronized (_friendsList)
         {
-            _friendsList.add(f);
-        }
+            //empty list
+            _friendsList.removeAll(new ArrayList<>(_friendsList));
 
+            //fill list
+            for (AppFriend f : list)
+            {
+                _friendsList.add(f);
+
+                //log
+                Logger.getLogger(getClass().getName()).log(Level.INFO, String.format("Added friend %s", f.getUsername()));
+            }
+        }
     }
 
-    private void addItem(AppFriend item)
-    {}
-    private void removeItem(AppFriend item)
-    {}
+
     public AppFriend getItem(int position)
     {
-        return null;
+        synchronized (_friendsList)
+        {
+            return _friendsList.get(position);
+        }
     }
 
 

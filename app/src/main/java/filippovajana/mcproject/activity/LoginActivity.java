@@ -19,6 +19,8 @@ public class LoginActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //TODO: check for valid session_id
     }
 
     public void userLoginButton_onClick(View view)

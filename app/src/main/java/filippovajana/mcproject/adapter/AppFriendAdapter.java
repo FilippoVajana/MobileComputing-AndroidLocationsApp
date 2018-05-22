@@ -42,6 +42,9 @@ public class AppFriendAdapter extends ArrayAdapter<AppFriend>
         AppDataModel model = AppDataModel.getInstance();
         AppFriend friend = model.getItem(position);
 
+        if (friend == null)
+            return listItem;
+
         //set name
         TextView nameText = (TextView) listItem.findViewById(R.id.textView_name);
         nameText.setText(friend.getUsername());

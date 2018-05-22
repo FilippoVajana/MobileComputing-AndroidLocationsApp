@@ -1,41 +1,30 @@
 package filippovajana.mcproject.activity;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
+import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import filippovajana.mcproject.R;
+import filippovajana.mcproject.adapter.AppFriendAdapter;
 import filippovajana.mcproject.model.AppDataModel;
 import filippovajana.mcproject.model.AppFriend;
 
 
 public class FriendsActivity extends AppCompatActivity
 {
+    AppDataModel _dataModel;
 
-    private List<AppFriend> _friendsList;
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener()
+    public FriendsActivity()
     {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item)
-        {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    return true;
-                case R.id.navigation_dashboard:
-                    return true;
-                case R.id.navigation_notifications:
-                    return true;
-            }
-            return false;
-        }
-    };
+        //init model reference
+        _dataModel = AppDataModel.getInstance();
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -43,30 +32,58 @@ public class FriendsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
 
-        //set bottom nav handler
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        //update friends list
+        updateFriendsListAsync();
 
-        //get followed friends
-        getFriendsListAsync();
+        //set ListView adapter
+        setFriendsListAdapter();
 
-        //check empty list
-        //if (empty) then add snackbar
     }
 
-    private void getFriendsListAsync()
-    {
-        AppDataModel model = AppDataModel.getInstance();
 
+    private void setFriendsListAdapter()
+    {
+        ArrayList<AppFriend> list = _dataModel.get_friendsList();
+
+        //build list adapter
+        AppFriendAdapter adapter = new AppFriendAdapter(this, list);
+
+        //set list adapter
+        ListView listView = (ListView) findViewById(R.id.friendsListView);
+        listView.setAdapter(adapter);
+
+        //check for empty list
+        showNoFriendsMessage(list.size());
+    }
+
+    private void updateFriendsListAsync()
+    {
         //spin new thread
         Runnable task = () ->
         {
-            //get list
-            ArrayList<AppFriend> list = model.get_friendsList();
-
-            //update local copy
-            _friendsList = list;
+            //update list
+            _dataModel.updateFriendsList();
         };
-        new Thread(task).start();
+        Thread updateThread = new Thread(task);
+        updateThread.start();
+        try
+        {
+            updateThread.join();
+        }catch (Exception e)
+        {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Exception during friends list update");
+        }
+    }
+
+
+    /**
+     * Show a '0 friends' snackbar message
+     * @param friendsCount
+     */
+    private void showNoFriendsMessage(int friendsCount)
+    {
+        String message = String.format("%d Friends Followed", friendsCount);
+        Snackbar.make(findViewById(R.id.myCoordinatorLayout), message, Snackbar.LENGTH_LONG)
+                .show();
     }
 }
