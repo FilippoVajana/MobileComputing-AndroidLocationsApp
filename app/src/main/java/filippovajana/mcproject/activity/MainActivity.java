@@ -18,9 +18,5 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
     }
 
-    public void navigateToLoginActivity(View view)
-    {
-        Intent navIntent = new Intent(this, LoginActivity.class);
-        startActivity(navIntent);
-    }
+
 }
