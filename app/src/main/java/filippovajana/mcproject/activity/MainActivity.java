@@ -1,27 +1,26 @@
 package filippovajana.mcproject.activity;
 
-import android.content.Intent;
-import android.support.annotation.NonNull;
+import android.support.annotation.IdRes;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
+import android.widget.FrameLayout;
 
 import filippovajana.mcproject.R;
+import filippovajana.mcproject.fragment.ProfileFragment;
 
 
 public class MainActivity extends AppCompatActivity
 {
-    private FragmentManager _fragmentManager;
     private FragmentTransaction _fragmentTransaction;
 
     public MainActivity()
     {
-        _fragmentManager = getSupportFragmentManager();
-        _fragmentTransaction = _fragmentManager.beginTransaction();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        _fragmentTransaction = fragmentManager.beginTransaction();
     }
 
 
@@ -30,6 +29,9 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //init bottom navigation
+        setupBottomNavigationView();
     }
 
 
@@ -39,34 +41,29 @@ public class MainActivity extends AppCompatActivity
                 findViewById(R.id.bottomMenu);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.action_profile:
+                item -> {
+                    switch (item.getItemId()) {
+                        case R.id.action_profile:
 
-                            case R.id.action_status_update:
+                        case R.id.action_status_update:
 
-                            case R.id.action_add_friend:
+                        case R.id.action_add_friend:
 
-                            case R.id.action_friends_list:
-                                gotoView(FriendsActivity.class);
+                        case R.id.action_friends_list:
+                            loadFragment(new ProfileFragment());
 
-                        }
-                        return true;
                     }
+                    return true;
                 });
     }
 
-    private void gotoView(Class destination)
-    {
-        Intent navIntent = new Intent(this, destination);
-        startActivity(navIntent);
-    }
 
-    //TODO: fragments load
-    private void loadFragment()
-    {
 
+    //TODO: safe fragment commit
+    private void loadFragment(Fragment fragment)
+    {
+        //add fragment
+        _fragmentTransaction.add(R.id.fragment_container, fragment);
+        _fragmentTransaction.commit();
     }
 }
