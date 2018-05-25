@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity
 
     private void navigateToFriendsActivity()
     {
-        Intent navIntent = new Intent(this, FriendsActivity.class);
+        Intent navIntent = new Intent(this, MainActivity.class);
         startActivity(navIntent);
     }
 
