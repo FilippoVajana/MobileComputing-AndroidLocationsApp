@@ -3,6 +3,7 @@ package filippovajana.mcproject.rest;
 import java.util.List;
 
 import filippovajana.mcproject.model.AppFriend;
+import filippovajana.mcproject.model.UserProfile;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -17,6 +18,11 @@ public interface EverywareLabAPI
     Call<String> getSessionId(@Field("username") String username,
                               @Field("password") String password);
 
+
     @GET("followed/")
     Call<FriendsListResponse> getFollowedFriends(@Query("session_id") String sessionId);
+
+
+    @GET("profile/")
+    Call<UserProfile> getUserProfile(@Query("session_id") String sessionId);
 }
