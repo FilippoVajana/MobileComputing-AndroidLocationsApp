@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import filippovajana.mcproject.activity.LoginActivity;
 import filippovajana.mcproject.model.AppFriend;
+import filippovajana.mcproject.model.UserProfile;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -41,7 +42,7 @@ public class RESTService
         return SESSION_TOKEN;
     }
 
-    //Login Activity
+    //Login Task
     public class LoginTask extends AsyncTask<String, Void, Boolean>
     {
 
@@ -87,9 +88,7 @@ public class RESTService
     }
 
 
-
-
-    //Friends Activity
+    //Friends Task
     public List<AppFriend> getFriendsList()
     {
         //get session id
@@ -122,4 +121,37 @@ public class RESTService
         }
     }
 
+    @Nullable
+    //Profile Task
+    public UserProfile getUserProfile()
+    {
+        //get session id
+        String sessioId = getSessionToken();
+
+        //build rest call
+        Call<UserProfile> call = apiService.getUserProfile(sessioId);
+
+        //execute call
+        try
+        {
+            Response<UserProfile> response = call.execute();
+
+            if (response.isSuccessful())
+            {
+                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "getUserProfile Successful");
+                return response.body();
+            }
+            else
+            {
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "getUserProfile Failed");
+                return null;
+            }
+
+        }catch (Exception e)
+        {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "getUserProfile Exception ");
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
