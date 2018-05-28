@@ -9,13 +9,22 @@ import filippovajana.mcproject.rest.RESTService;
 
 public class AppDataModel
 {
+    //services
+    private RESTService _rest;
+
     private ArrayList<AppFriend> _friendsList;
+    private UserProfile _userProfile;
 
     //SINGLETON
     private static AppDataModel _instance;
     private AppDataModel()
     {
+        //init services
+        _rest = new RESTService();
+
+        //init fields
         _friendsList = new ArrayList<>();
+        _userProfile = new UserProfile();
     }
 
     public static AppDataModel getInstance()
@@ -26,7 +35,31 @@ public class AppDataModel
     }
 
 
+    //Profile
+    public UserProfile get_userProfile()
+    {
+        synchronized (_userProfile)
+        {
+            return _userProfile;
+        }
+    }
+    public void set_userProfile(UserProfile profile)
+    {
+        synchronized (_userProfile)
+        {
+            this._userProfile = _userProfile;
+        }
+    }
+    public void updateProfileInformation()
+    {
+        //call REST service
+        synchronized (_userProfile)
+        {
+            _userProfile = _rest.getUserProfile();
+        }
+    }
 
+    //Friends
     public ArrayList<AppFriend> get_friendsList()
     {
         synchronized (_friendsList)
@@ -34,12 +67,10 @@ public class AppDataModel
             return _friendsList;
         }
     }
-
     public void updateFriendsList()
     {
         //call rest API
-        RESTService rest = new RESTService();
-        List<AppFriend> list = rest.getFriendsList();
+        List<AppFriend> list = _rest.getFriendsList();
 
         //update list
         synchronized (_friendsList)
@@ -57,8 +88,6 @@ public class AppDataModel
             }
         }
     }
-
-
     public AppFriend getItem(int position)
     {
         synchronized (_friendsList)
