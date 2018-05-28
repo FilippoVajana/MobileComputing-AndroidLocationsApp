@@ -1,21 +1,24 @@
 package filippovajana.mcproject.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class UserProfile
 {
+    @SerializedName("username")
     String _username;
+    @SerializedName("msg")
     String _stateMessage;
-    GeoPosition _position;
+    @SerializedName("lat")
+    float _latitude;
+    @SerializedName("log")
+    float _longitude;
 
-    private static UserProfile _instance;
-    public static UserProfile getInstance()
+    public UserProfile()
     {
-        if (_instance == null)
-            _instance = new UserProfile();
-        return _instance;
-    }
-    private UserProfile()
-    {
-        _instance = this;
+        _username = "Marco Tullio Cicerone";
+        _stateMessage = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dui diam, semper a turpis eget, dictum fermentum risus. Praesent vel.";
+        _latitude = 0f;
+        _longitude = 0f;
     }
 
 
@@ -23,7 +26,6 @@ public class UserProfile
     {
         return _username;
     }
-
     public void set_username(String _username)
     {
         this._username = _username;
@@ -33,19 +35,26 @@ public class UserProfile
     {
         return _stateMessage;
     }
-
     public void set_stateMessage(String _stateMessage)
     {
         this._stateMessage = _stateMessage;
     }
 
-    public GeoPosition get_position()
+    public float get_latitude()
     {
-        return _position;
+        return _latitude;
+    }
+    public void set_latitude(float _latitude)
+    {
+        this._latitude = _latitude;
     }
 
-    public void set_position(GeoPosition _position)
+    public float get_longitude()
     {
-        this._position = _position;
+        return _longitude;
+    }
+    public void set_longitude(float _longitude)
+    {
+        this._longitude = _longitude;
     }
 }
