@@ -42,6 +42,10 @@ public class RESTService
         return SESSION_TOKEN;
     }
 
+
+    //TODO: on response trigger a popup in main activity
+
+
     //Login Task
     public class LoginTask extends AsyncTask<String, Void, Boolean>
     {
@@ -152,6 +156,47 @@ public class RESTService
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "getUserProfile Exception ");
             e.printStackTrace();
             return null;
+        }
+    }
+
+
+    //Status Task
+    public void updateUserStatus(UserProfile profile)
+    {
+        //get query parameters
+        String sessioId = getSessionToken();
+        String message = profile.get_stateMessage();
+        String latitude = String.valueOf(profile.get_latitude());
+        String longitude = String.valueOf(profile.get_longitude());
+
+        //build rest call
+        Call<Void> call = apiService.updateUserStatus(
+                sessioId,
+                message,
+                latitude,
+                longitude);
+
+        //execute call
+        try
+        {
+            Response<Void> response = call.execute();
+
+            if (response.isSuccessful())
+            {
+                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "updateUserStatus Successful");
+                return;
+            }
+            else
+            {
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "updateUserStatus Failed");
+                return;
+            }
+
+        }catch (Exception e)
+        {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "updateUserStatus Exception ");
+            e.printStackTrace();
+            return;
         }
     }
 }
