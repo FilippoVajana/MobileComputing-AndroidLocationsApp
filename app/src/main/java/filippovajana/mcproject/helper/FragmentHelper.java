@@ -8,8 +8,11 @@ import android.widget.FrameLayout;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import filippovajana.mcproject.fragment.ProfileFragment;
+import filippovajana.mcproject.fragment.StatusUpdateFragment;
 
 public class FragmentHelper
 {
@@ -17,6 +20,7 @@ public class FragmentHelper
     public static Dictionary<String, Fragment> fragmentDictionary = new Hashtable()
     {{
         put("Profile", new ProfileFragment());
+        put("Status", new StatusUpdateFragment());
     }};
 
 
@@ -32,10 +36,12 @@ public class FragmentHelper
             FragmentTransaction transaction = manager.beginTransaction();
             //replace current fragment
             transaction.replace(container.getId(), fragment);
-            //append to backstack
-            transaction.addToBackStack("Profile_Fragment");
             //commit
             transaction.commit();
+        }
+        else
+        {
+            Logger.getLogger("FragmentHelper").log(Level.INFO, "Fragment already loaded");
         }
     }
 }

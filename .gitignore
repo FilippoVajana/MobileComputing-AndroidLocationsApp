@@ -1,3 +1,6 @@
+# Project Specs PDF
+*.pdf
+
 # Built application files
 *.apk
 *.ap_
