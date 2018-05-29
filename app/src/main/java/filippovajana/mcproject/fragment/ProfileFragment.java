@@ -52,6 +52,9 @@ public class ProfileFragment extends Fragment
             //get profile information
             _profile = getProfileInformation();
 
+            if (_profile == null) //check if null
+                return;
+
             //set profile information
             _view.post(() -> setProfileInformation());
         }
