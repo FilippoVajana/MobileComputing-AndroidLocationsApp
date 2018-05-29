@@ -10,6 +10,7 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 
 import filippovajana.mcproject.fragment.ProfileFragment;
+import filippovajana.mcproject.fragment.StatusUpdateFragment;
 
 public class FragmentHelper
 {
@@ -17,6 +18,7 @@ public class FragmentHelper
     public static Dictionary<String, Fragment> fragmentDictionary = new Hashtable()
     {{
         put("Profile", new ProfileFragment());
+        put("Status", new StatusUpdateFragment());
     }};
 
 

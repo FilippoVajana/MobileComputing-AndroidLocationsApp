@@ -47,6 +47,9 @@ public class MainActivity extends AppCompatActivity
                                     FragmentHelper.fragmentDictionary.get("Profile"),
                                     findViewById(R.id.fragment_container));
                         case R.id.action_status_update:
+                            FragmentHelper.loadFragment(getSupportFragmentManager(),
+                                    FragmentHelper.fragmentDictionary.get("Status   fv"),
+                                    findViewById(R.id.fragment_container));
 
                         case R.id.action_add_friend:
 
