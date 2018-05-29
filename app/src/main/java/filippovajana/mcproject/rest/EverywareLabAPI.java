@@ -25,4 +25,10 @@ public interface EverywareLabAPI
 
     @GET("profile/")
     Call<UserProfile> getUserProfile(@Query("session_id") String sessionId);
+
+    @GET("status_update/")
+    Call<Void> updateUserStatus(@Query("session_id") String sessionId,
+                                @Query("message") String message,
+                                @Query("lat") String latitude,
+                                @Query("lon") String longitude);
 }

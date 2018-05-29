@@ -46,10 +46,14 @@ public class MainActivity extends AppCompatActivity
                             FragmentHelper.loadFragment(getSupportFragmentManager(),
                                     FragmentHelper.fragmentDictionary.get("Profile"),
                                     findViewById(R.id.fragment_container));
+                            break;
                         case R.id.action_status_update:
-
+                            FragmentHelper.loadFragment(getSupportFragmentManager(),
+                                    FragmentHelper.fragmentDictionary.get("Status"),
+                                    findViewById(R.id.fragment_container));
+                            break;
                         case R.id.action_add_friend:
-
+                            break;
                         case R.id.action_friends_list:
 
                     }

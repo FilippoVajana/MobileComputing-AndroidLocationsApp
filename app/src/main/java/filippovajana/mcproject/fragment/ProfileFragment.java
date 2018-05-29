@@ -46,11 +46,11 @@ public class ProfileFragment extends Fragment
         @Override
         public void run()
         {
-            //update profile information
-            AppDataModel.getInstance().updateProfileInformation();
-
             //get profile information
             _profile = getProfileInformation();
+
+            if (_profile == null) //check if null
+                return;
 
             //set profile information
             _view.post(() -> setProfileInformation());

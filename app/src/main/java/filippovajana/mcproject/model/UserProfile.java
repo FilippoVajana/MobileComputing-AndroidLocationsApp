@@ -21,7 +21,6 @@ public class UserProfile
         _longitude = 0f;
     }
 
-
     public String get_username()
     {
         return _username;

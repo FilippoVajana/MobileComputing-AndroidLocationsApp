@@ -40,24 +40,24 @@ public class AppDataModel
     {
         synchronized (_userProfile)
         {
+            //update with remote information
+            _userProfile = _rest.getUserProfile();
             return _userProfile;
         }
     }
+
     public void set_userProfile(UserProfile profile)
     {
         synchronized (_userProfile)
         {
-            this._userProfile = _userProfile;
+            //update remote profile
+            _rest.updateUserStatus(profile);
+
+            //update local profile
+            _userProfile = profile;
         }
     }
-    public void updateProfileInformation()
-    {
-        //call REST service
-        synchronized (_userProfile)
-        {
-            _userProfile = _rest.getUserProfile();
-        }
-    }
+
 
     //Friends
     public ArrayList<AppFriend> get_friendsList()
