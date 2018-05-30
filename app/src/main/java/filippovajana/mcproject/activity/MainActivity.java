@@ -55,6 +55,9 @@ public class MainActivity extends AppCompatActivity
                         case R.id.action_add_friend:
                             break;
                         case R.id.action_friends_list:
+                            FragmentHelper.loadFragment(getSupportFragmentManager(),
+                                    FragmentHelper.fragmentDictionary.get("Map"),
+                                    findViewById(R.id.fragment_container));
 
                     }
                     return true;
