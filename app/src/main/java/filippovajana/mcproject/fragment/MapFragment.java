@@ -1,6 +1,8 @@
 package filippovajana.mcproject.fragment;
 
+import android.Manifest;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import filippovajana.mcproject.R;
+import filippovajana.mcproject.location.LocationManager;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback
@@ -28,7 +31,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback
 
     //Google Map
     GoogleMap _map;
-
 
     public MapFragment()
     {
@@ -67,6 +69,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback
         _mapView.onResume();
     }
 
+
     @Override
     public void onDestroy()
     {
@@ -85,12 +88,39 @@ public class MapFragment extends Fragment implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap)
     {
-        _map = googleMap;
-        Logger.getLogger(getClass().getName()).log(Level.INFO, "Getting Google Map reference");
 
-        _map.setMinZoomPreference(12);
+        //get location service (check for location permissions)
+        LocationManager location = new LocationManager(this);
+
+        _map = googleMap;
+
+        //setup map
+        try
+        {
+            _map.setMinZoomPreference(10);
+            _map.setMyLocationEnabled(true);
+        }
+        catch (SecurityException s_ex)
+        {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "onMapReady - Security Exception");
+        }
+        catch (Exception ex)
+        {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "onMapReady - Exception");
+            ex.printStackTrace();
+        }
+
+        //move to sample position
         LatLng ny = new LatLng(45.464161, 9.190336);
         _map.moveCamera(CameraUpdateFactory.newLatLng(ny));
+    }
 
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        Logger.getLogger(getClass().getName()).log(Level.INFO, String.format("Location Permissions %s", grantResults[0]));
     }
 }

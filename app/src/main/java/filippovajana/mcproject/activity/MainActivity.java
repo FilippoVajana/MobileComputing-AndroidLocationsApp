@@ -45,11 +45,13 @@ public class MainActivity extends AppCompatActivity
                         case R.id.action_profile:
                             FragmentHelper.loadFragment(getSupportFragmentManager(),
                                     FragmentHelper.fragmentDictionary.get("Profile"),
+                                    FragmentHelper.fragmentDictionary.get("Profile").getClass().getSimpleName(),
                                     findViewById(R.id.fragment_container));
                             break;
                         case R.id.action_status_update:
                             FragmentHelper.loadFragment(getSupportFragmentManager(),
                                     FragmentHelper.fragmentDictionary.get("Status"),
+                                    FragmentHelper.fragmentDictionary.get("Status").getClass().getSimpleName(),
                                     findViewById(R.id.fragment_container));
                             break;
                         case R.id.action_add_friend:
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity
                         case R.id.action_friends_list:
                             FragmentHelper.loadFragment(getSupportFragmentManager(),
                                     FragmentHelper.fragmentDictionary.get("Map"),
+                                    FragmentHelper.fragmentDictionary.get("Map").getClass().getSimpleName(),
                                     findViewById(R.id.fragment_container));
 
                     }
