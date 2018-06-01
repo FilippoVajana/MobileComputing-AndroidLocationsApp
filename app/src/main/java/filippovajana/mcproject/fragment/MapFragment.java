@@ -1,6 +1,7 @@
 package filippovajana.mcproject.fragment;
 
 import android.Manifest;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -97,7 +101,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback
         //setup map
         try
         {
-            _map.setMinZoomPreference(10);
+            _map.setMinZoomPreference(15);
             _map.setMyLocationEnabled(true);
         }
         catch (SecurityException s_ex)
@@ -110,12 +114,33 @@ public class MapFragment extends Fragment implements OnMapReadyCallback
             ex.printStackTrace();
         }
 
-        //move to sample position
-        LatLng ny = new LatLng(45.464161, 9.190336);
-        _map.moveCamera(CameraUpdateFactory.newLatLng(ny));
+        //move to last location
+        moveToLastLocation();
     }
 
+    public void moveToLastLocation()
+    {
+        //location service
+        LocationManager location = new LocationManager(this);
 
+        //request last location
+        Task<Location> locationTask = location.getUserLocation();
+        
+        locationTask.addOnSuccessListener(new OnSuccessListener<Location>()
+        {
+            @Override
+            public void onSuccess(Location location)
+            {
+                if (location != null)
+                {
+                    LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
+                    _map.moveCamera(CameraUpdateFactory.newLatLng(position));
+                }
+            }
+        });
+    }
+
+    //TODO: remove
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
