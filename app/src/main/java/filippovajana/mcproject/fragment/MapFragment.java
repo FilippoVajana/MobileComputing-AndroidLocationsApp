@@ -1,21 +1,15 @@
 package filippovajana.mcproject.fragment;
 
-import android.Manifest;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCanceledListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.logging.Level;
@@ -115,32 +109,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback
         }
 
         //move to last location
-        moveToLastLocation();
+        moveToLastLocationAsync();
     }
 
-    public void moveToLastLocation()
+    public void moveToLastLocationAsync()
     {
         //location service
         LocationManager location = new LocationManager(this);
 
         //request last location
-        Task<Location> locationTask = location.getUserLocation();
-        
-        locationTask.addOnSuccessListener(new OnSuccessListener<Location>()
-        {
-            @Override
-            public void onSuccess(Location location)
-            {
-                if (location != null)
-                {
-                    LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
-                    _map.moveCamera(CameraUpdateFactory.newLatLng(position));
-                }
-            }
-        });
+        Task<Location> locationTask = location.getUserLocation(null, null);
     }
 
+
+
     //TODO: remove
+    /*
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
@@ -148,4 +132,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback
 
         Logger.getLogger(getClass().getName()).log(Level.INFO, String.format("Location Permissions %s", grantResults[0]));
     }
+    */
 }

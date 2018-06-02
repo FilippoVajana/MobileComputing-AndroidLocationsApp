@@ -3,12 +3,16 @@ package filippovajana.mcproject.location;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
@@ -23,7 +27,7 @@ public class LocationManager
     private static FusedLocationProviderClient _locationProvider;
 
 
-    public LocationManager(Fragment fragment)
+    public LocationManager(Fragment fragment) //TODO: add GoogleMap reference & initial settings
     {
         //init fragment
         _fragment = fragment;
@@ -61,16 +65,54 @@ public class LocationManager
     }
 
     //Last Location
-    public Task<Location> getUserLocation()
+    public Task<Location> getUserLocation(@Nullable OnSuccessListener<Location> onSuccessListener, @Nullable OnFailureListener onFailureListener) //TODO: add onSuccess/onFailure handler
     {
         try
         {
-            Task<Location> lastLocation = _locationProvider.getLastLocation();
-            return lastLocation;
+            Task<Location> locationTask = _locationProvider.getLastLocation();
+
+            //add success listener
+            if (onSuccessListener != null)
+                locationTask.addOnSuccessListener(onSuccessListener);
+            else
+                locationTask.addOnSuccessListener(defaultOnSuccessListener);
+
+            //add failure listener
+            if (onFailureListener != null)
+                locationTask.addOnFailureListener(onFailureListener);
+            else
+                locationTask.addOnFailureListener(defaultOnFailureListener);
+
+            return locationTask;
         }catch (SecurityException s_ex)
         {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "getLastLocation() Exception");
+            defaultOnFailureListener.onFailure(s_ex);
             return null;
         }
     }
+
+    //TODO: add default onSuccess/OnFailure
+    private OnSuccessListener<Location> defaultOnSuccessListener = new OnSuccessListener<Location>()
+    {
+        @Override
+        public void onSuccess(Location location)
+        {
+            //display snackbar
+            Snackbar snackbar = Snackbar.make(_fragment.getView(), "Success", Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+    };
+
+    private OnFailureListener defaultOnFailureListener = new OnFailureListener()
+    {
+        @Override
+        public void onFailure(@NonNull Exception e)
+        {
+            //display snackbar
+            Snackbar snackbar = Snackbar.make(_fragment.getView(), "Failure", Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+    };
+
 }
