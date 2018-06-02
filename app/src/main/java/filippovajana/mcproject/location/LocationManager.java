@@ -11,7 +11,9 @@ import android.support.v4.app.Fragment;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -52,6 +54,7 @@ public class LocationManager
         try
         {
             _map.setMyLocationEnabled(true);
+            //_map.setMinZoomPreference(15); //minimum zoom level set to "Streets"
         }
         catch (SecurityException s_ex)
         {
@@ -82,7 +85,7 @@ public class LocationManager
                 _fragment.getResources().getInteger(R.integer.location_permission_request_id));
     }
 
-    //Last Location
+    //Location
     public Task<Location> getUserLocation(@Nullable OnSuccessListener<Location> onSuccessListener, @Nullable OnFailureListener onFailureListener) //TODO: add onSuccess/onFailure handler
     {
         try
@@ -110,6 +113,15 @@ public class LocationManager
         }
     }
 
+    //Camera
+    public void moveToLocation(LatLng position)
+    {
+        //get user location
+        getUserLocation(location -> {
+            _map.moveCamera(CameraUpdateFactory.newLatLng(position)); //set camera position
+            _map.animateCamera(CameraUpdateFactory.zoomTo(15.0f), 8000, null); //zoom in
+            }, null);
+    }
 
     //Default Listener
     private OnSuccessListener<Location> defaultOnSuccessListener = new OnSuccessListener<Location>()
@@ -122,7 +134,6 @@ public class LocationManager
             snackbar.show();
         }
     };
-
     private OnFailureListener defaultOnFailureListener = new OnFailureListener()
     {
         @Override

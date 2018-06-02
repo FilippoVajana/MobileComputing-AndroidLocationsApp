@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:tag="Status Update Fragment">
+    android:tag="Status Update Fragment"
+    style="@style/AppTheme">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -28,15 +29,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:hint="Status Message" />
-                <Button
+
+                <android.support.v7.widget.AppCompatButton
                     android:id="@+id/statusSendButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@color/colorPrimaryDark"
                     android:text="Send"
                     android:drawableRight="@drawable/ic_send_black_24dp"
-                    android:onClick="sendButton_onClick"/>
+                    android:onClick="sendButton_onClick"
+                    android:enabled="false"/>
             </LinearLayout>
         </android.support.design.widget.TextInputLayout>
 
@@ -45,8 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/inputLayout"
-            android:layout_marginTop="20dp"
-            android:background="@color/colorPrimary">
+            android:layout_marginTop="20dp">
         </com.google.android.gms.maps.MapView>
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
