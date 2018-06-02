@@ -11,7 +11,7 @@ import android.support.v4.app.Fragment;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -24,14 +24,18 @@ import filippovajana.mcproject.R;
 public class LocationManager
 {
     private Fragment _fragment;
+    private GoogleMap _map;
     private static FusedLocationProviderClient _locationProvider;
 
 
-    public LocationManager(Fragment fragment) //TODO: add GoogleMap reference & initial settings
+    public LocationManager(Fragment fragment, GoogleMap map) //TODO: add GoogleMap reference & initial settings
     {
         //init fragment
         _fragment = fragment;
-        Logger.getLogger(getClass().getName()).log(Level.INFO, String.format("Location Fragment %s", _fragment.getTag()));
+
+        //init map
+        _map = map;
+        setMapDefaults();
 
         //init location provider
         _locationProvider = LocationServices.getFusedLocationProviderClient(_fragment.getContext());
@@ -39,7 +43,21 @@ public class LocationManager
         //check for permissions
         boolean locationGranted = checkLocationPermission();
         if (locationGranted == false)
-            requestLocationPermissions();
+            requestLocationPermissions(); //Async???
+    }
+
+    private void setMapDefaults()
+    {
+        //set defaults
+        try
+        {
+            _map.setMyLocationEnabled(true);
+        }
+        catch (SecurityException s_ex)
+        {
+            Logger.getLogger(getClass().getName())
+                    .log(Level.SEVERE, String.format("%s - %s", getClass().getSimpleName(), s_ex.getMessage()));
+        }
     }
 
     //Permissions
@@ -92,7 +110,8 @@ public class LocationManager
         }
     }
 
-    //TODO: add default onSuccess/OnFailure
+
+    //Default Listener
     private OnSuccessListener<Location> defaultOnSuccessListener = new OnSuccessListener<Location>()
     {
         @Override

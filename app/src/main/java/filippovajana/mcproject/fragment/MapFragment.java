@@ -1,6 +1,5 @@
 package filippovajana.mcproject.fragment;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,10 +9,6 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.tasks.Task;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import filippovajana.mcproject.R;
 import filippovajana.mcproject.location.LocationManager;
@@ -29,6 +24,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback
 
     //Google Map
     GoogleMap _map;
+    LocationManager _locationManager;
 
     public MapFragment()
     {
@@ -59,22 +55,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback
         return _view;
     }
 
-    //TODO: call lifecycle methods
+    //Map Lifecycle
     @Override
     public void onResume()
     {
         super.onResume();
         _mapView.onResume();
     }
-
-
     @Override
     public void onDestroy()
     {
         super.onDestroy();
         _mapView.onDestroy();
     }
-
     @Override
     public void onPause()
     {
@@ -87,26 +80,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap)
     {
 
-        //get location service (check for location permissions)
-        LocationManager location = new LocationManager(this);
-
-        _map = googleMap;
-
-        //setup map
-        try
-        {
-            _map.setMinZoomPreference(15);
-            _map.setMyLocationEnabled(true);
-        }
-        catch (SecurityException s_ex)
-        {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "onMapReady - Security Exception");
-        }
-        catch (Exception ex)
-        {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "onMapReady - Exception");
-            ex.printStackTrace();
-        }
+        //init location manager
+        _locationManager = new LocationManager(this, googleMap);
 
         //move to last location
         moveToLastLocationAsync();
@@ -114,11 +89,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback
 
     public void moveToLastLocationAsync()
     {
-        //location service
-        LocationManager location = new LocationManager(this);
-
         //request last location
-        Task<Location> locationTask = location.getUserLocation(null, null);
+        _locationManager.getUserLocation(null, null);
     }
 
 
