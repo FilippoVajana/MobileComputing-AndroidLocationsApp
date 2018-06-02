@@ -87,7 +87,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback
         moveToLastLocationAsync();
     }
 
-    public void moveToLastLocationAsync()
+    private void moveToLastLocationAsync()
     {
         //request last location
         _locationManager.getUserLocation(null, null);
