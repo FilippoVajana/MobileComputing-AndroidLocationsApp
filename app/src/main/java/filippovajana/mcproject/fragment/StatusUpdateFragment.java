@@ -1,5 +1,6 @@
 package filippovajana.mcproject.fragment;
 
+import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -18,7 +20,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import filippovajana.mcproject.R;
+import filippovajana.mcproject.helper.SystemHelper;
 import filippovajana.mcproject.location.LocationManager;
 import filippovajana.mcproject.model.AppDataModel;
 import filippovajana.mcproject.model.UserProfile;
@@ -148,10 +154,15 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
 
     private void updateUserStatus()
     {
+
         //get message text
         TextInputEditText input = (TextInputEditText)_view.findViewById(R.id.statusMessage);
         String stateMessage = input.getText().toString();
 
+        //close keyboard
+        SystemHelper.closeKeyboard(getActivity(), input);
+
+        //update profile
         Thread updateTask = new Thread(new Runnable()
         {
             @Override
@@ -165,6 +176,9 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
                 profile.set_longitude((float) _userPosition.longitude);
 
                 AppDataModel.getInstance().set_userProfile(profile); //also update remote profile
+
+                //show snackbar
+                Snackbar.make(_view, "Status Updated", Snackbar.LENGTH_LONG).show();
             }
         });
         updateTask.start();
