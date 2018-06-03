@@ -33,9 +33,10 @@ public class ProfileFragment extends Fragment
         // Inflate the layout for this fragment
         _view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        //TODO: uncomment
         //add user info
-        Thread task = new Thread(profileTask);
-        task.start();
+        //Thread task = new Thread(profileTask);
+        //task.start();
 
         return _view;
     }
@@ -59,14 +60,22 @@ public class ProfileFragment extends Fragment
 
     private UserProfile getProfileInformation()
     {
+        //TODO: uncomment
+        /*
         //call model
         UserProfile userProfile = AppDataModel.getInstance().get_userProfile();
 
         return userProfile;
+        */
+
+
+        return null;
     }
 
     private void setProfileInformation()
     {
+        //TODO: uncomment
+        /*
         //username
         TextView usernameText = _view.findViewById(R.id.userNameText);
         usernameText.setText(_profile.get_username());
@@ -77,6 +86,7 @@ public class ProfileFragment extends Fragment
 
         //position
         //TODO: display last position
+        */
     }
 }
 
