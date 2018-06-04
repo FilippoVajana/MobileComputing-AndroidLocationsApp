@@ -41,6 +41,7 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
     //Google Map
     private GoogleMap _map;
     private LocationManager _locationManager;
+    private LatLng _userPosition;
 
 
     @Override
@@ -88,8 +89,6 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
         super.onPause();
         _mapView.onPause();
     }
-
-
     @Override
     public void onMapReady(GoogleMap googleMap)
     {
@@ -100,20 +99,10 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
         _locationManager = new LocationManager(this, googleMap);
 
         //move to last location
-        moveToLastLocationAsync();
+        _locationManager.getUserLocation(onSuccessListener, onFailureListener);
     }
 
-    @Override
-    public void onClick(View view)
-    {
-        switch (view.getId())
-        {
-            case R.id.statusSendButton:
-                updateUserStatus();
-        }
-    }
-
-    private LatLng _userPosition;
+    //Location operations handlers
     OnSuccessListener<Location> onSuccessListener = new OnSuccessListener<Location>()
     {
         @Override
@@ -133,7 +122,6 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
             _view.findViewById(R.id.statusSendButton).setEnabled(true);
         }
     };
-
     OnFailureListener onFailureListener = new OnFailureListener()
     {
         @Override
@@ -145,13 +133,16 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
         }
     };
 
-    private void moveToLastLocationAsync()
+    //Status update
+    @Override
+    public void onClick(View view)
     {
-        //request last location
-        _locationManager.getUserLocation(onSuccessListener, onFailureListener);
-
+        switch (view.getId())
+        {
+            case R.id.statusSendButton:
+                updateUserStatus();
+        }
     }
-
     private void updateUserStatus()
     {
 
@@ -163,23 +154,18 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
         SystemHelper.closeKeyboard(getActivity(), input);
 
         //update profile
-        Thread updateTask = new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                //update profile informations
-                UserProfile profile = AppDataModel.getInstance().get_userProfile();
+        Thread updateTask = new Thread(() -> {
+            //update profile informations
+            UserProfile profile = AppDataModel.getInstance().get_userProfile();
 
-                profile.set_stateMessage(stateMessage);
-                profile.set_latitude((float) _userPosition.latitude);
-                profile.set_longitude((float) _userPosition.longitude);
+            profile.set_stateMessage(stateMessage);
+            profile.set_latitude((float) _userPosition.latitude);
+            profile.set_longitude((float) _userPosition.longitude);
 
-                AppDataModel.getInstance().set_userProfile(profile); //also update remote profile
+            AppDataModel.getInstance().set_userProfile(profile); //also update remote profile
 
-                //show snackbar
-                Snackbar.make(_view, "Status Updated", Snackbar.LENGTH_LONG).show();
-            }
+            //show snackbar
+            Snackbar.make(_view, "Status Updated", Snackbar.LENGTH_LONG).show();
         });
         updateTask.start();
     }
