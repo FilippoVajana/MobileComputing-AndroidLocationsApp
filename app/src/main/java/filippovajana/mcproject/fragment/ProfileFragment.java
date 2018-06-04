@@ -58,11 +58,8 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback
         //get map
         _mapView.getMapAsync(this);
 
-
-        //TODO: uncomment
-        //add user info
-        //Thread task = new Thread(profileTask);
-        //task.start();
+        //get user info
+        new Thread(profileTask).start();
 
         return _view;
     }
@@ -106,6 +103,13 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback
         @Override
         public void onSuccess(Location location)
         {
+            //check null location
+            if ( location == null)
+            {
+                onFailureListener.onFailure(new NullPointerException());
+                return;
+            }
+
             //display snackbar
             Snackbar.make(_view, "Location Update Success", Snackbar.LENGTH_LONG)
                     .show();
@@ -149,22 +153,14 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback
 
     private UserProfile getProfileInformation()
     {
-        //TODO: uncomment
-        /*
         //call model
         UserProfile userProfile = AppDataModel.getInstance().get_userProfile();
 
         return userProfile;
-        */
-
-
-        return null;
     }
 
     private void setProfileInformation()
     {
-        //TODO: uncomment
-        /*
         //username
         TextView usernameText = _view.findViewById(R.id.userNameText);
         usernameText.setText(_profile.get_username());
@@ -172,10 +168,6 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback
         //message
         TextView messageText = _view.findViewById(R.id.userMessageText);
         messageText.setText(_profile.get_stateMessage());
-
-        //position
-        //TODO: display last position
-        */
     }
 }
 

@@ -108,6 +108,9 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
         @Override
         public void onSuccess(Location location)
         {
+            //TODO: add null check
+
+
             //display snackbar
             Snackbar.make(_view, "Location Update Success", Snackbar.LENGTH_LONG)
                     .show();
@@ -159,6 +162,8 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
             UserProfile profile = AppDataModel.getInstance().get_userProfile();
 
             profile.set_stateMessage(stateMessage);
+
+            //TODO: add position null check
             profile.set_latitude((float) _userPosition.latitude);
             profile.set_longitude((float) _userPosition.longitude);
 
