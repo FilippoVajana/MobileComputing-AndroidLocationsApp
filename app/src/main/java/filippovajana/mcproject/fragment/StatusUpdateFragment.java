@@ -109,8 +109,8 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
         public void onSuccess(Location location)
         {
             //display snackbar
-            Snackbar snackbar = Snackbar.make(_view, "Location Update Success", Snackbar.LENGTH_LONG);
-            snackbar.show();
+            Snackbar.make(_view, "Location Update Success", Snackbar.LENGTH_LONG)
+                    .show();
 
             //update location in user profile
             _userPosition = new LatLng(location.getLatitude(), location.getLongitude());
