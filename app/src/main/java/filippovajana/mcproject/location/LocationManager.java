@@ -46,7 +46,9 @@ public class LocationManager
         //check for permissions
         boolean locationGranted = checkLocationPermission();
         if (locationGranted == false)
-            requestLocationPermissions(); //Async???
+            requestLocationPermissions();
+
+        //TODO: prompt user to activate location services
     }
 
     private void setMapDefaults()
