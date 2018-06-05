@@ -21,4 +21,23 @@ public class SystemHelper
             Logger.getLogger("SystemHelper").log(Level.SEVERE, e.getMessage());
         }
     }
+
+
+    public static void logError(Class source, String message)
+    {
+        //get logger
+        Logger logger = Logger.getLogger(source.getSimpleName());
+
+        //log
+        logger.log(Level.SEVERE, message);
+    }
+
+    public static void logWarning(Class source, String message)
+    {
+        //get logger
+        Logger logger = Logger.getLogger(source.getSimpleName());
+
+        //log
+        logger.log(Level.WARNING, message);
+    }
 }
