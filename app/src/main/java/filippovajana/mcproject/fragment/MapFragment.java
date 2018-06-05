@@ -1,6 +1,7 @@
 package filippovajana.mcproject.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,9 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import filippovajana.mcproject.R;
 import filippovajana.mcproject.location.LocationManager;
@@ -23,7 +27,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback
     MapView _mapView;
 
     //Google Map
-    GoogleMap _map;
     LocationManager _locationManager;
 
     public MapFragment()
@@ -74,8 +77,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback
         super.onPause();
         _mapView.onPause();
     }
-
-
     @Override
     public void onMapReady(GoogleMap googleMap)
     {
@@ -93,9 +94,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback
         _locationManager.getUserLocation(null, null);
     }
 
-
-
-    //TODO: remove
     /*
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
