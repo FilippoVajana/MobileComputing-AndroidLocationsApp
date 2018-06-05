@@ -1,15 +1,17 @@
 package filippovajana.mcproject.fragment;
 
+import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -18,29 +20,32 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import filippovajana.mcproject.R;
+import filippovajana.mcproject.helper.SystemHelper;
 import filippovajana.mcproject.location.LocationManager;
 import filippovajana.mcproject.model.AppDataModel;
 import filippovajana.mcproject.model.UserProfile;
 
-public class ProfileFragment extends Fragment implements OnMapReadyCallback
+
+public class StatusUpdateFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback
 {
     //fragment view
-    View _view;
+    private View _view;
 
-    //map view
-    MapView _mapView;
+    //fragment map view
+    private MapView _mapView;
 
     //Google Map
     private GoogleMap _map;
     private LocationManager _locationManager;
-
-    //user profile
-    UserProfile _profile;
+    private LatLng _userPosition;
 
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
     }
@@ -49,7 +54,11 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         // Inflate the layout for this fragment
-        _view = inflater.inflate(R.layout.fragment_profile, container, false);
+        _view = inflater.inflate(R.layout.fragment_status_update, container, false);
+
+        //set send button onClick listener
+        Button b = _view.findViewById(R.id.statusSendButton);
+        b.setOnClickListener(this);
 
         //get mapView
         _mapView = (MapView) _view.findViewById(R.id.mapView);
@@ -58,12 +67,8 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback
         //get map
         _mapView.getMapAsync(this);
 
-        //get user info
-        new Thread(profileTask).start();
-
         return _view;
     }
-
 
     //Map Lifecycle
     @Override
@@ -93,7 +98,7 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback
         //init location manager
         _locationManager = new LocationManager(this, googleMap);
 
-        //request last location
+        //move to last location
         _locationManager.getUserLocation(onSuccessListener, onFailureListener);
     }
 
@@ -103,22 +108,21 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback
         @Override
         public void onSuccess(Location location)
         {
-            //check null location
-            if ( location == null)
-            {
-                onFailureListener.onFailure(new NullPointerException());
-                return;
-            }
+            //TODO: add null check
+
 
             //display snackbar
             Snackbar.make(_view, "Location Update Success", Snackbar.LENGTH_LONG)
                     .show();
 
             //update location in user profile
-            LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
+            _userPosition = new LatLng(location.getLatitude(), location.getLongitude());
 
             //move to user location
-            _locationManager.moveToLocation(position);
+            _locationManager.moveToLocation(_userPosition);
+
+            //enable send button
+            _view.findViewById(R.id.statusSendButton).setEnabled(true);
         }
     };
     OnFailureListener onFailureListener = new OnFailureListener()
@@ -132,42 +136,44 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback
         }
     };
 
-
-
-    //Profile
-    Runnable profileTask = new Runnable()
+    //Status update
+    @Override
+    public void onClick(View view)
     {
-        @Override
-        public void run()
+        switch (view.getId())
         {
-            //get profile information
-            _profile = getProfileInformation();
-
-            if (_profile == null) //check if null
-                return;
-
-            //set profile information
-            _view.post(() -> setProfileInformation());
+            case R.id.statusSendButton:
+                updateUserStatus();
         }
-    };
-
-    private UserProfile getProfileInformation()
+    }
+    private void updateUserStatus()
     {
-        //call model
-        UserProfile userProfile = AppDataModel.getInstance().get_userProfile();
 
-        return userProfile;
+        //get message text
+        TextInputEditText input = (TextInputEditText)_view.findViewById(R.id.statusMessage);
+        String stateMessage = input.getText().toString();
+
+        //close keyboard
+        SystemHelper.closeKeyboard(getActivity(), input);
+
+        //update profile
+        Thread updateTask = new Thread(() -> {
+            //update profile informations
+            UserProfile profile = AppDataModel.getInstance().get_userProfile();
+
+            profile.set_stateMessage(stateMessage);
+
+            //TODO: add position null check
+            profile.set_latitude((float) _userPosition.latitude);
+            profile.set_longitude((float) _userPosition.longitude);
+
+            AppDataModel.getInstance().set_userProfile(profile); //also update remote profile
+
+            //show snackbar
+            Snackbar.make(_view, "Status Updated", Snackbar.LENGTH_LONG).show();
+        });
+        updateTask.start();
     }
 
-    private void setProfileInformation()
-    {
-        //username
-        TextView usernameText = _view.findViewById(R.id.userNameText);
-        usernameText.setText(_profile.get_username());
 
-        //message
-        TextView messageText = _view.findViewById(R.id.userMessageText);
-        messageText.setText(_profile.get_stateMessage());
-    }
 }
-
