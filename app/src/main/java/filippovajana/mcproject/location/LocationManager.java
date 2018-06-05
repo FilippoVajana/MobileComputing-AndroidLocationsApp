@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import filippovajana.mcproject.R;
+import filippovajana.mcproject.helper.SystemHelper;
 
 public class LocationManager
 {
@@ -30,7 +31,7 @@ public class LocationManager
     private static FusedLocationProviderClient _locationProvider;
 
 
-    public LocationManager(Fragment fragment, GoogleMap map) //TODO: add GoogleMap reference & initial settings
+    public LocationManager(Fragment fragment, GoogleMap map)
     {
         //init fragment
         _fragment = fragment;
@@ -45,7 +46,9 @@ public class LocationManager
         //check for permissions
         boolean locationGranted = checkLocationPermission();
         if (locationGranted == false)
-            requestLocationPermissions(); //Async???
+            requestLocationPermissions();
+
+        //TODO: prompt user to activate location services
     }
 
     private void setMapDefaults()
@@ -58,8 +61,7 @@ public class LocationManager
         }
         catch (SecurityException s_ex)
         {
-            Logger.getLogger(getClass().getName())
-                    .log(Level.SEVERE, String.format("%s - %s", getClass().getSimpleName(), s_ex.getMessage()));
+            SystemHelper.logError(this.getClass(), String.format("%s - %s", getClass().getSimpleName(), s_ex.getMessage()));
         }
     }
 
@@ -69,11 +71,13 @@ public class LocationManager
         //check permissions
         if (ActivityCompat.checkSelfPermission(_fragment.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Location Permissions DENIED");
+            //Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Location Permissions DENIED");
+            SystemHelper.logWarning(this.getClass(), "Location Permissions DENIED");
             return false;
         }
         else
         {
+            SystemHelper.logWarning(this.getClass(), "Location Permissions GRANTED");
             return true;
         }
     }
@@ -107,7 +111,7 @@ public class LocationManager
             return locationTask;
         }catch (SecurityException s_ex)
         {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "getLastLocation() Exception");
+            SystemHelper.logError(this.getClass(), "getLastLocation() Exception");
             defaultOnFailureListener.onFailure(s_ex);
             return null;
         }
