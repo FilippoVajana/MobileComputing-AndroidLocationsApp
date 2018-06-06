@@ -14,6 +14,9 @@ import filippovajana.mcproject.rest.RESTService;
 public class LoginActivity extends AppCompatActivity
 {
 
+    //TODO: disable back navigation
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -50,7 +53,7 @@ public class LoginActivity extends AppCompatActivity
             resultText.setText("Successful");
 
             //next page
-            navigateToFriendsActivity();
+            navigateToMainActivity();
         }
         else
         {
@@ -59,10 +62,13 @@ public class LoginActivity extends AppCompatActivity
         }
     }
 
-    private void navigateToFriendsActivity()
+    private void navigateToMainActivity()
     {
-        Intent navIntent = new Intent(this, MainActivity.class);
-        startActivity(navIntent);
+        Intent intent = new Intent(this, MainActivity.class);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 
 }

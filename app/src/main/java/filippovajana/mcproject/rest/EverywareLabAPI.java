@@ -31,4 +31,7 @@ public interface EverywareLabAPI
                                 @Query("message") String message,
                                 @Query("lat") String latitude,
                                 @Query("lon") String longitude);
+
+    @GET("logout/")
+    Call<Void> logoutUser(@Query("session_id") String sessionId);
 }
