@@ -30,8 +30,7 @@ public class FragmentHelper
     {
         //ensure current transaction finishes
         manager.executePendingTransactions();
-
-        Logger.getLogger("FragmentHelper").log(Level.INFO, String.format("%d", fragment.getId()));
+        SystemHelper.logWarning(FragmentHelper.class, String.format("%d", fragment.getId()));
 
         //check if fragment was already added
         if (manager.findFragmentById(fragment.getId()) == null)
@@ -42,11 +41,12 @@ public class FragmentHelper
             transaction.replace(container.getId(), fragment, fragmentTag);
             //commit
             transaction.commit();
-            Logger.getLogger("FragmentHelper").log(Level.INFO, String.format("%s Loaded", fragment.getTag()));
+
+            SystemHelper.logWarning(FragmentHelper.class, String.format("%s Loaded", fragmentTag));
         }
         else
         {
-            Logger.getLogger("FragmentHelper").log(Level.INFO, String.format("%s Already Loaded", fragmentTag));
+            SystemHelper.logError(FragmentHelper.class, String.format("%s Already Loaded", fragmentTag));
         }
     }
 }

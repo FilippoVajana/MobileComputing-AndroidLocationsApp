@@ -1,5 +1,6 @@
 package filippovajana.mcproject.fragment;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,7 +9,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -19,11 +22,13 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import filippovajana.mcproject.R;
+import filippovajana.mcproject.activity.LoginActivity;
 import filippovajana.mcproject.location.LocationManager;
 import filippovajana.mcproject.model.AppDataModel;
 import filippovajana.mcproject.model.UserProfile;
+import filippovajana.mcproject.rest.RESTService;
 
-public class ProfileFragment extends Fragment implements OnMapReadyCallback
+public class ProfileFragment extends Fragment implements OnMapReadyCallback, OnClickListener
 {
     //fragment view
     View _view;
@@ -61,6 +66,10 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback
         //get user info
         new Thread(profileTask).start();
 
+        //init logout button
+        Button btn = _view.findViewById(R.id.logoutButton);
+        btn.setOnClickListener(this);
+
         return _view;
     }
 
@@ -97,7 +106,8 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback
         _locationManager.getUserLocation(onSuccessListener, onFailureListener);
     }
 
-    //Location operations handlers
+
+    //Location
     OnSuccessListener<Location> onSuccessListener = new OnSuccessListener<Location>()
     {
         @Override
@@ -133,7 +143,6 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback
     };
 
 
-
     //Profile
     Runnable profileTask = new Runnable()
     {
@@ -150,7 +159,6 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback
             _view.post(() -> setProfileInformation());
         }
     };
-
     private UserProfile getProfileInformation()
     {
         //call model
@@ -158,7 +166,6 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback
 
         return userProfile;
     }
-
     private void setProfileInformation()
     {
         //username
@@ -168,6 +175,41 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback
         //message
         TextView messageText = _view.findViewById(R.id.userMessageText);
         messageText.setText(_profile.get_stateMessage());
+    }
+
+
+    //Logout
+    @Override
+    public void onClick(View view)
+    {
+        switch (view.getId())
+        {
+            case R.id.logoutButton:
+                logoutAsync();
+        }
+    }
+
+    private void logoutAsync()
+    {
+        Thread logoutTask = new Thread(() ->
+        {
+            RESTService rest = new RESTService();
+            boolean result = rest.logoutUser();
+
+            if (result == true)
+            {
+                //TODO: navigate to login page
+                Snackbar.make(_view, "Logout successful", Snackbar.LENGTH_LONG).show();
+
+                Intent intent = new Intent(this.getActivity(), LoginActivity.class);
+                startActivity(intent);
+            }
+            else
+                Snackbar.make(_view, "Logout failed", Snackbar.LENGTH_LONG).show();
+        });
+        logoutTask.start();
+
+
     }
 }
 
