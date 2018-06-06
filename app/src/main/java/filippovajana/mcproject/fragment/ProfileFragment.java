@@ -121,7 +121,7 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback, OnC
             }
 
             //display snackbar
-            Snackbar.make(_view, "Location Update Success", Snackbar.LENGTH_LONG)
+            Snackbar.make(_view, "Location Update", Snackbar.LENGTH_LONG)
                     .show();
 
             //update location in user profile
@@ -137,7 +137,7 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback, OnC
         public void onFailure(@NonNull Exception e)
         {
             //display snackbar
-            Snackbar snackbar = Snackbar.make(_view, "Location Update Failure", Snackbar.LENGTH_LONG);
+            Snackbar snackbar = Snackbar.make(_view, "Location Error", Snackbar.LENGTH_LONG);
             snackbar.show();
         }
     };
@@ -188,7 +188,6 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback, OnC
                 logoutAsync();
         }
     }
-
     private void logoutAsync()
     {
         Thread logoutTask = new Thread(() ->
@@ -202,7 +201,9 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback, OnC
                 Snackbar.make(_view, "Logout successful", Snackbar.LENGTH_LONG).show();
 
                 Intent intent = new Intent(this.getActivity(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                this.getActivity().finish();
             }
             else
                 Snackbar.make(_view, "Logout failed", Snackbar.LENGTH_LONG).show();

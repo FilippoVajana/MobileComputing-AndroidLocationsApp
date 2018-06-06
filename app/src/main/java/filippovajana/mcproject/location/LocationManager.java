@@ -123,7 +123,7 @@ public class LocationManager
         //get user location
         getUserLocation(location -> {
             _map.moveCamera(CameraUpdateFactory.newLatLng(position)); //set camera position
-            _map.animateCamera(CameraUpdateFactory.zoomTo(10), 4000, null); //zoom in
+            _map.animateCamera(CameraUpdateFactory.zoomTo(5), 4000, null); //zoom in
             }, null);
     }
 

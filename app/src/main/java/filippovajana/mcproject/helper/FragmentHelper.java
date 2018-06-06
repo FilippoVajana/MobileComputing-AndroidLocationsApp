@@ -42,6 +42,10 @@ public class FragmentHelper
             //commit
             transaction.commit();
 
+            //add to back stack
+            transaction.addToBackStack(fragmentTag);
+
+
             SystemHelper.logWarning(FragmentHelper.class, String.format("%s Loaded", fragmentTag));
         }
         else
