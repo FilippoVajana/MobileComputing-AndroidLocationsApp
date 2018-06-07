@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import filippovajana.mcproject.activity.LoginActivity;
+import filippovajana.mcproject.helper.SystemHelper;
 import filippovajana.mcproject.model.AppFriend;
 import filippovajana.mcproject.model.UserProfile;
 import retrofit2.Call;
@@ -125,8 +126,9 @@ public class RESTService
         }
     }
 
-    @Nullable
+
     //Profile Task
+    @Nullable
     public UserProfile getUserProfile()
     {
         //get session id
@@ -197,6 +199,35 @@ public class RESTService
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "updateUserStatus Exception ");
             e.printStackTrace();
             return;
+        }
+    }
+
+
+    //Logout
+    public boolean logoutUser()
+    {
+        Call<Void> call = apiService.logoutUser(getSessionToken());
+
+        //execute call
+        try
+        {
+            Response<Void> response = call.execute();
+
+            if (response.isSuccessful())
+            {
+                SystemHelper.logWarning(this.getClass(), "Logout successful");
+                return true;
+            }
+            else
+            {
+                SystemHelper.logWarning(this.getClass(), "Logout failed");
+                return false;
+            }
+
+        }catch (Exception e)
+        {
+            SystemHelper.logError(this.getClass(), String.format("Logout %s", e.getMessage()));
+            return false;
         }
     }
 }
