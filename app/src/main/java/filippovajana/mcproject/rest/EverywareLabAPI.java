@@ -1,5 +1,7 @@
 package filippovajana.mcproject.rest;
 
+import android.content.Intent;
+
 import java.util.List;
 
 import filippovajana.mcproject.model.AppFriend;
@@ -26,12 +28,20 @@ public interface EverywareLabAPI
     @GET("profile/")
     Call<UserProfile> getUserProfile(@Query("session_id") String sessionId);
 
+
     @GET("status_update/")
     Call<Void> updateUserStatus(@Query("session_id") String sessionId,
                                 @Query("message") String message,
                                 @Query("lat") String latitude,
                                 @Query("lon") String longitude);
 
+
     @GET("logout/")
     Call<Void> logoutUser(@Query("session_id") String sessionId);
+
+
+    @GET("users/")
+    Call<UsersListRespose> getUsers(@Query("session_id") String sessionId,
+                                @Query("usernamestart") String namePrefix,
+                                @Query("limit") Integer resultLimit);
 }

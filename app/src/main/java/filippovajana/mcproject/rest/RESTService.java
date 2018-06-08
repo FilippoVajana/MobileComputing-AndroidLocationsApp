@@ -21,7 +21,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class RESTService
 {
     private static final String BASE_URL = "https://ewserver.di.unimi.it/mobicomp/geopost/";
-    private static String SESSION_TOKEN; //fv:fv
+    private static String SESSION_TOKEN;
     private static Retrofit retrofit;
     private static EverywareLabAPI apiService;
 
@@ -109,23 +109,58 @@ public class RESTService
 
             if (response.isSuccessful())
             {
-                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "getFriendsList Successful");
+                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "getUsersList Successful");
                 return response.body().getFriendsList();
             }
             else
             {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "getFriendsList Failed");
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "getUsersList Failed");
                 return new ArrayList<>();
             }
 
         }catch (Exception e)
         {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "getFriendsList Exception ");
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "getUsersList Exception ");
             e.printStackTrace();
             return new ArrayList<>();
         }
     }
 
+
+    //Users Task
+    public UsersListRespose getUsers(String prefix, int limit)
+    {
+        //TODO: remove
+        String token = getSessionToken();
+
+        //build rest call
+        Call<UsersListRespose> call = apiService.getUsers(
+                getSessionToken(),
+                prefix,
+                limit);
+
+        //execute call
+        try
+        {
+            Response<UsersListRespose> response = call.execute();
+
+            if (response.isSuccessful())
+            {
+                SystemHelper.logWarning(this.getClass(), "Retrieve users successful");
+                return response.body();
+            }
+            else
+            {
+                SystemHelper.logWarning(this.getClass(), "Retrieve users failed");
+                return new UsersListRespose();
+            }
+
+        }catch (Exception e)
+        {
+            SystemHelper.logError(this.getClass(), String.format("Logout %s", e.getMessage()));
+            return null;
+        }
+    }
 
     //Profile Task
     @Nullable
@@ -206,6 +241,7 @@ public class RESTService
     //Logout
     public boolean logoutUser()
     {
+        //build rest call
         Call<Void> call = apiService.logoutUser(getSessionToken());
 
         //execute call
