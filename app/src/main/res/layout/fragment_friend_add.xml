@@ -18,15 +18,18 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:maxLines="2"
-            android:hint="Friend username"/>
+            android:hint="Search"/>
 
         <ListView
             android:id="@+id/resultListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/searchText">
+            android:layout_below="@id/searchText"
+            android:choiceMode="singleChoice"
+            android:listSelector="@drawable/list_view_selector">
 
         </ListView>
+
 
 
     </RelativeLayout>

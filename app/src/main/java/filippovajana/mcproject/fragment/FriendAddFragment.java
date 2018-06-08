@@ -7,8 +7,10 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -62,7 +64,9 @@ public class FriendAddFragment extends Fragment
         _resultListView = _view.findViewById(R.id.resultListView);
         _resultListView.setAdapter(_resultListAdapter);
 
-        //TODO: set search bar onTextChanged listener
+        //TODO: on click handler
+
+        //set search bar onTextChanged listener
         _searchBar = _view.findViewById(R.id.searchText);
         _searchBar.addTextChangedListener(_searchBarWatcher);
 
@@ -72,16 +76,8 @@ public class FriendAddFragment extends Fragment
         return _view;
     }
 
-    @Override
-    public void onResume()
-    {
-        super.onResume();
 
-        //update list
-        //setResultListAsync(new String());
-    }
-
-
+    //Users List
     private <E> void updateListContent(List<E> target, List<E> source)
     {
         _view.post(() -> {
@@ -101,7 +97,6 @@ public class FriendAddFragment extends Fragment
             }
         });
     }
-
     private void setResultListAsync(@NonNull String prefix)
     {
         //update task
@@ -126,6 +121,7 @@ public class FriendAddFragment extends Fragment
         updateTask.start();
     }
 
+    //Search Bar
     private TextWatcher _searchBarWatcher = new TextWatcher()
     {
         @Override
@@ -147,6 +143,17 @@ public class FriendAddFragment extends Fragment
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+        {
+
+        }
+    };
+
+    //List View
+    AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener()
+    {
+
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
         {
 
         }
