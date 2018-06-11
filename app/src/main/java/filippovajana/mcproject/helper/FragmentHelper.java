@@ -11,6 +11,7 @@ import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import filippovajana.mcproject.fragment.FriendAddFragment;
 import filippovajana.mcproject.fragment.MapFragment;
 import filippovajana.mcproject.fragment.ProfileFragment;
 import filippovajana.mcproject.fragment.StatusUpdateFragment;
@@ -22,6 +23,7 @@ public class FragmentHelper
     {{
         put("Profile", new ProfileFragment());
         put("Status", new StatusUpdateFragment());
+        put("Add", new FriendAddFragment());
         put("Map", new MapFragment());
     }};
 

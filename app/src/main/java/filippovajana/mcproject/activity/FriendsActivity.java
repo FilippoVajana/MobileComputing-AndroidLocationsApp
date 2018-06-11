@@ -58,13 +58,14 @@ public class FriendsActivity extends AppCompatActivity
 
     private void updateFriendsListAsync()
     {
-        //spin new thread
-        Runnable task = () ->
+        //build task
+        Thread updateThread = new Thread(() ->
         {
             //update list
             _dataModel.updateFriendsList();
-        };
-        Thread updateThread = new Thread(task);
+        });
+
+        //run task
         updateThread.start();
         try
         {
