@@ -127,9 +127,6 @@ public class RESTService
     //Users Task
     public UsersListResponse getUsers(String prefix, int limit)
     {
-        //TODO: remove
-        String token = getSessionToken();
-
         //build rest call
         Call<UsersListResponse> call = apiService.getUsers(
                 getSessionToken(),

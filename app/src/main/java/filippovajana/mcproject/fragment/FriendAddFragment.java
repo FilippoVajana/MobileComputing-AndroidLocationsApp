@@ -127,20 +127,11 @@ public class FriendAddFragment extends Fragment
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long l)
         {
-            /**TODO:
-             * get selection
-             * show dialog popup
-             * call rest service (check followed + follow)
-             * show result
-             */
+            //get username
             String selectedEntry = _resultList.get(position);
+
+            //show dialog
             showDialog(selectedEntry);
-
-
-
-
-            Snackbar.make(_view, String.format("Selected %s", _resultList.get(position)), Snackbar.LENGTH_INDEFINITE)
-                    .show();
         }
     };
 

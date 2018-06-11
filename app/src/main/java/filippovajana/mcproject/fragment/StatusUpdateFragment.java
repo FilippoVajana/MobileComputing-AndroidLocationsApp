@@ -1,6 +1,5 @@
 package filippovajana.mcproject.fragment;
 
-import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,8 +9,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -19,9 +18,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import filippovajana.mcproject.R;
 import filippovajana.mcproject.helper.SystemHelper;
@@ -57,7 +53,7 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
         _view = inflater.inflate(R.layout.fragment_status_update, container, false);
 
         //set send button onClick listener
-        Button b = _view.findViewById(R.id.statusSendButton);
+        Button b = _view.findViewById(R.id.statusMessageSendButton);
         b.setOnClickListener(this);
 
         //get mapView
@@ -98,7 +94,7 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
         //init location manager
         _locationManager = new LocationManager(this, googleMap);
 
-        //move to last location
+        //get last location
         _locationManager.getUserLocation(onSuccessListener, onFailureListener);
     }
 
@@ -109,7 +105,8 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
         public void onSuccess(Location location)
         {
             //TODO: add null check
-
+            if (location == null)
+                return;
 
             //display snackbar
             Snackbar.make(_view, "Location Update Success", Snackbar.LENGTH_LONG)
@@ -122,7 +119,7 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
             _locationManager.moveToLocation(_userPosition);
 
             //enable send button
-            _view.findViewById(R.id.statusSendButton).setEnabled(true);
+            _view.findViewById(R.id.statusMessageSendButton).setEnabled(true);
         }
     };
     OnFailureListener onFailureListener = new OnFailureListener()
@@ -142,7 +139,7 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
     {
         switch (view.getId())
         {
-            case R.id.statusSendButton:
+            case R.id.statusMessageSendButton:
                 updateUserStatus();
         }
     }
@@ -150,20 +147,34 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
     {
 
         //get message text
-        TextInputEditText input = (TextInputEditText)_view.findViewById(R.id.statusMessage);
+        TextInputEditText input = (TextInputEditText)_view.findViewById(R.id.statusMessageEditText);
         String stateMessage = input.getText().toString();
 
         //close keyboard
         SystemHelper.closeKeyboard(getActivity(), input);
 
+        //check null position
+        if (_userPosition == null)
+        {
+            //snackbar
+            Snackbar.make(_view, "Invalid Location", Snackbar.LENGTH_LONG)
+                    .show();
+
+            //prompt location settings change
+            _locationManager.promptLocationSettingsChange();
+
+            //get location
+            _locationManager.getUserLocation(onSuccessListener, onFailureListener);
+            return;
+        }
+
         //update profile
         Thread updateTask = new Thread(() -> {
-            //update profile informations
+
             UserProfile profile = AppDataModel.getInstance().get_userProfile();
 
+            //update profile informations
             profile.set_stateMessage(stateMessage);
-
-            //TODO: add position null check
             profile.set_latitude((float) _userPosition.latitude);
             profile.set_longitude((float) _userPosition.longitude);
 
@@ -171,6 +182,10 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
 
             //show snackbar
             Snackbar.make(_view, "Status Updated", Snackbar.LENGTH_LONG).show();
+
+            //clear message text
+            EditText messageText = _view.findViewById(R.id.statusMessageEditText);
+            messageText.setText("");
         });
         updateTask.start();
     }
