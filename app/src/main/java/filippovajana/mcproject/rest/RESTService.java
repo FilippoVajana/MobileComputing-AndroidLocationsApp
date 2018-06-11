@@ -1,6 +1,7 @@
 package filippovajana.mcproject.rest;
 
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -42,10 +43,6 @@ public class RESTService
     {
         return SESSION_TOKEN;
     }
-
-
-    //TODO: on response trigger a popup in main activity
-
 
     //Login Task
     public class LoginTask extends AsyncTask<String, Void, Boolean>
@@ -128,13 +125,13 @@ public class RESTService
 
 
     //Users Task
-    public UsersListRespose getUsers(String prefix, int limit)
+    public UsersListResponse getUsers(String prefix, int limit)
     {
         //TODO: remove
         String token = getSessionToken();
 
         //build rest call
-        Call<UsersListRespose> call = apiService.getUsers(
+        Call<UsersListResponse> call = apiService.getUsers(
                 getSessionToken(),
                 prefix,
                 limit);
@@ -142,7 +139,7 @@ public class RESTService
         //execute call
         try
         {
-            Response<UsersListRespose> response = call.execute();
+            Response<UsersListResponse> response = call.execute();
 
             if (response.isSuccessful())
             {
@@ -152,7 +149,7 @@ public class RESTService
             else
             {
                 SystemHelper.logWarning(this.getClass(), "Retrieve users failed");
-                return new UsersListRespose();
+                return new UsersListResponse();
             }
 
         }catch (Exception e)
@@ -238,7 +235,7 @@ public class RESTService
     }
 
 
-    //Logout
+    //Logout Task
     public boolean logoutUser()
     {
         //build rest call
@@ -264,6 +261,35 @@ public class RESTService
         {
             SystemHelper.logError(this.getClass(), String.format("Logout %s", e.getMessage()));
             return false;
+        }
+    }
+
+    //Follow User Task
+    public FollowUserResponse followUser(@NonNull String username)
+    {
+        //build rest call
+        Call<String> call = apiService.followUser(getSessionToken(), username);
+
+        //execute call
+        try
+        {
+            Response<String> response = call.execute();
+
+            if (response.isSuccessful())
+            {
+                SystemHelper.logWarning(this.getClass(), "Follow user successful");
+                return new FollowUserResponse("Success");
+            }
+            else
+            {
+                SystemHelper.logWarning(this.getClass(), "Follow user failed");
+                return new FollowUserResponse(response.errorBody().string());
+            }
+
+        }catch (Exception e)
+        {
+            SystemHelper.logError(this.getClass(), String.format("Follow user %s", e.getMessage()));
+            return null;
         }
     }
 }

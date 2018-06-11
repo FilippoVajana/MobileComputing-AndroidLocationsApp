@@ -1,10 +1,5 @@
 package filippovajana.mcproject.rest;
 
-import android.content.Intent;
-
-import java.util.List;
-
-import filippovajana.mcproject.model.AppFriend;
 import filippovajana.mcproject.model.UserProfile;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -41,7 +36,11 @@ public interface EverywareLabAPI
 
 
     @GET("users/")
-    Call<UsersListRespose> getUsers(@Query("session_id") String sessionId,
-                                @Query("usernamestart") String namePrefix,
-                                @Query("limit") Integer resultLimit);
+    Call<UsersListResponse> getUsers(@Query("session_id") String sessionId,
+                                     @Query("usernamestart") String namePrefix,
+                                     @Query("limit") Integer resultLimit);
+
+    @GET("follow/")
+    Call<String> followUser(@Query("session_id") String sessioId,
+                            @Query("username") String username);
 }
