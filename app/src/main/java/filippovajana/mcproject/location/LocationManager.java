@@ -90,7 +90,7 @@ public class LocationManager
     }
 
     //Location
-    public Task<Location> getUserLocation(@Nullable OnSuccessListener<Location> onSuccessListener, @Nullable OnFailureListener onFailureListener) //TODO: add onSuccess/onFailure handler
+    public Task<Location> getUserLocation(@Nullable OnSuccessListener<Location> onSuccessListener, @Nullable OnFailureListener onFailureListener)
     {
         try
         {
