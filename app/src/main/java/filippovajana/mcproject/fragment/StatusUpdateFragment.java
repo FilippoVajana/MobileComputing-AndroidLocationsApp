@@ -109,7 +109,8 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
         public void onSuccess(Location location)
         {
             //TODO: add null check
-
+            if (location == null)
+                return;
 
             //display snackbar
             Snackbar.make(_view, "Location Update Success", Snackbar.LENGTH_LONG)
