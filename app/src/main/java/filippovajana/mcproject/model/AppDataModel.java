@@ -41,7 +41,14 @@ public class AppDataModel
         synchronized (_userProfile)
         {
             //update with remote information
-            _userProfile = _rest.getUserProfile();
+            UserProfile result = _rest.getUserProfile();
+
+            //check for null result
+            if (result == null)
+                return null;
+            else
+                _userProfile = result; //update local reference
+
             return _userProfile;
         }
     }
