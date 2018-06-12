@@ -3,8 +3,6 @@ package filippovajana.mcproject.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import filippovajana.mcproject.R;
@@ -13,12 +11,11 @@ import filippovajana.mcproject.helper.FragmentHelper;
 
 public class MainActivity extends AppCompatActivity
 {
-    private FragmentTransaction _fragmentTransaction;
+    private FragmentHelper _fragmentHelper;
 
     public MainActivity()
     {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        _fragmentTransaction = fragmentManager.beginTransaction();
+
     }
 
 
@@ -30,6 +27,13 @@ public class MainActivity extends AppCompatActivity
 
         //init bottom navigation
         setupBottomNavigationView();
+
+        //init fragment helper
+        _fragmentHelper = FragmentHelper.getInstance(this.getSupportFragmentManager(), findViewById(R.id.fragment_container));
+
+        //TODO: load friends list
+        //load profile fragment
+        _fragmentHelper.loadFragment(FragmentHelper.Fragments.PROFILE);
     }
 
 
@@ -43,28 +47,16 @@ public class MainActivity extends AppCompatActivity
                     switch (item.getItemId())
                     {
                         case R.id.action_profile:
-                            FragmentHelper.loadFragment(getSupportFragmentManager(),
-                                    FragmentHelper.fragmentDictionary.get("Profile"),
-                                    FragmentHelper.fragmentDictionary.get("Profile").getClass().getSimpleName(),
-                                    findViewById(R.id.fragment_container));
+
                             break;
                         case R.id.action_status_update:
-                            FragmentHelper.loadFragment(getSupportFragmentManager(),
-                                    FragmentHelper.fragmentDictionary.get("Status"),
-                                    FragmentHelper.fragmentDictionary.get("Status").getClass().getSimpleName(),
-                                    findViewById(R.id.fragment_container));
+
                             break;
                         case R.id.action_add_friend:
-                            FragmentHelper.loadFragment(getSupportFragmentManager(),
-                                    FragmentHelper.fragmentDictionary.get("Add"),
-                                    FragmentHelper.fragmentDictionary.get("Add").getClass().getSimpleName(),
-                                    findViewById(R.id.fragment_container));
+
                             break;
                         case R.id.action_friends_list:
-                            FragmentHelper.loadFragment(getSupportFragmentManager(),
-                                    FragmentHelper.fragmentDictionary.get("Map"),
-                                    FragmentHelper.fragmentDictionary.get("Map").getClass().getSimpleName(),
-                                    findViewById(R.id.fragment_container));
+
 
                     }
                     return true;
