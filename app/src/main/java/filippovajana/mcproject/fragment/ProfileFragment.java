@@ -157,8 +157,16 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback, OnC
             //get profile information
             _profile = getProfileInformation();
 
-            if (_profile == null) //check if null
-                return;
+            //check if null
+            if (_profile == null)
+            {
+                //show error snackbar
+                Snackbar.make(_view, "Error loading user profile", Snackbar.LENGTH_INDEFINITE)
+                        .show();
+
+                //init default user
+                _profile = new UserProfile();
+            }
 
             //set profile information
             _view.post(() -> setProfileInformation());
