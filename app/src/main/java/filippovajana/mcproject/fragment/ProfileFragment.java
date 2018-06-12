@@ -136,9 +136,14 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback, OnC
         @Override
         public void onFailure(@NonNull Exception e)
         {
-            //display snackbar
-            Snackbar snackbar = Snackbar.make(_view, "Location Error", Snackbar.LENGTH_LONG);
-            snackbar.show();
+            try
+            {
+                //display snackbar
+                Snackbar snackbar = Snackbar.make(_view, "Location Error", Snackbar.LENGTH_LONG);
+                snackbar.show();
+            }catch (Exception ex)
+            {
+            }
         }
     };
 

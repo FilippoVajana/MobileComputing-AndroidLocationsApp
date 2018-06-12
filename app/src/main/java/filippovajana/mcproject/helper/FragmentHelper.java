@@ -29,7 +29,7 @@ public class FragmentHelper
     private FrameLayout _container;
 
     private static FragmentHelper _instance = null;
-    private FragmentHelper(FragmentManager manager, FrameLayout container)
+    public FragmentHelper(FragmentManager manager, FrameLayout container)
     {
         SystemHelper.logWarning(FragmentHelper.class, "Initialize FragmentHelper");
 
@@ -39,17 +39,19 @@ public class FragmentHelper
         //init fragment container
         _container = container;
     }
+//
+//    public static FragmentHelper getInstance(FragmentManager baseManager, FrameLayout baseContainer)
+//    {
+//
+//        if (_instance == null)
+//        {
+//            _instance = new FragmentHelper(baseManager, baseContainer);
+//        }
+//
+//        return _instance;
+//    }
 
-    public static FragmentHelper getInstance(FragmentManager baseManager, FrameLayout baseContainer)
-    {
-        if (_instance == null)
-        {
-            _instance = new FragmentHelper(baseManager, baseContainer);
-        }
-
-        return _instance;
-    }
-
+    public static Fragments loadedFragment = null;
     public void loadFragment(Fragments fragmentTag)
     {
         //build fragment instance
@@ -69,12 +71,12 @@ public class FragmentHelper
             //replace current fragment
             transaction.replace(_container.getId(), fragment, fragmentTag.toString());
 
-            //add to back stack
-            //_transaction.addToBackStack(fragmentTag); //try set null
-
             //commit
             transaction.commit();
             SystemHelper.logWarning(FragmentHelper.class, String.format("%s Loaded", fragmentTag));
+
+            //update loaded fragment variable
+            loadedFragment = fragmentTag;
         }
         else
         {

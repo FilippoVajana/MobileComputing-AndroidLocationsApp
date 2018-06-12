@@ -7,35 +7,74 @@ import android.support.v7.app.AppCompatActivity;
 
 import filippovajana.mcproject.R;
 import filippovajana.mcproject.helper.FragmentHelper;
+import filippovajana.mcproject.helper.SystemHelper;
 
 
 public class MainActivity extends AppCompatActivity
 {
-    private FragmentHelper _fragmentHelper;
-
-    public MainActivity()
-    {
-
-    }
-
+    public MainActivity(){}
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SystemHelper.logError(this.getClass(), "onCreate()");
 
         //init bottom navigation
         setupBottomNavigationView();
-
-        //init fragment helper
-        _fragmentHelper = FragmentHelper.getInstance(this.getSupportFragmentManager(), findViewById(R.id.fragment_container));
-
-        //TODO: load friends list
-        //load profile fragment
-        _fragmentHelper.loadFragment(FragmentHelper.Fragments.PROFILE);
     }
 
+    private FragmentHelper _fragmentHelper;
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        SystemHelper.logError(this.getClass(), "onStart()");
+
+        //init fragment helper
+        _fragmentHelper = new FragmentHelper(this.getSupportFragmentManager(), findViewById(R.id.fragment_container));
+
+        //reload last fragment
+        if (FragmentHelper.loadedFragment == null)
+        {
+            //TODO: load friends list
+            _fragmentHelper.loadFragment(FragmentHelper.Fragments.PROFILE);
+        }
+        else
+        {
+            _fragmentHelper.loadFragment(FragmentHelper.loadedFragment);
+        }
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        SystemHelper.logError(this.getClass(), "onPause()");
+    }
+
+    private static FragmentHelper.Fragments _lastFragment;
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+
+        //reset loaded fragment
+        _lastFragment = FragmentHelper.loadedFragment;
+
+        FragmentHelper.loadedFragment = FragmentHelper.Fragments.PROFILE; //enforce navigation schema
+        SystemHelper.logError(this.getClass(), "onStop()");
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        //device orientation hack
+        //FragmentHelper.loadedFragment = _lastFragment;
+        SystemHelper.logError(this.getClass(), "onDestroy()");
+    }
 
     private void setupBottomNavigationView()
     {
