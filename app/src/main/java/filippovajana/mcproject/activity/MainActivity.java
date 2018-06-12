@@ -47,17 +47,16 @@ public class MainActivity extends AppCompatActivity
                     switch (item.getItemId())
                     {
                         case R.id.action_profile:
-
+                            _fragmentHelper.loadFragment(FragmentHelper.Fragments.PROFILE);
                             break;
                         case R.id.action_status_update:
-
+                            _fragmentHelper.loadFragment(FragmentHelper.Fragments.STATUS);
                             break;
                         case R.id.action_add_friend:
-
+                            _fragmentHelper.loadFragment(FragmentHelper.Fragments.ADD);
                             break;
                         case R.id.action_friends_list:
-
-
+                            _fragmentHelper.loadFragment(FragmentHelper.Fragments.MAP); //TODO: change to friends list
                     }
                     return true;
                 });

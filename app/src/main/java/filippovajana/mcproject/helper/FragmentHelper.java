@@ -26,7 +26,6 @@ public class FragmentHelper
     }};
 
     private FragmentManager _manager;
-    private FragmentTransaction _transaction;
     private FrameLayout _container;
 
     private static FragmentHelper _instance = null;
@@ -36,9 +35,6 @@ public class FragmentHelper
 
         //init fragment manager
         _manager = manager;
-
-        //init fragment transaction
-        _transaction = _manager.beginTransaction();
 
         //init fragment container
         _container = container;
@@ -58,7 +54,7 @@ public class FragmentHelper
     {
         //build fragment instance
         Fragment fragment = _fragmentDictionary.get(fragmentTag);
-        SystemHelper.logWarning(FragmentHelper.class, String.format("%d", fragment.getId()));
+        SystemHelper.logWarning(FragmentHelper.class, String.format("Fragment tag: %s", fragment.getTag()));
 
 
         //ensure current transaction finishes
@@ -67,14 +63,17 @@ public class FragmentHelper
         //check if fragment was already added
         if (_manager.findFragmentByTag(fragment.getTag()) == null)
         {
+            //build transaction
+            FragmentTransaction transaction = _manager.beginTransaction();
+
             //replace current fragment
-            _transaction.replace(_container.getId(), fragment, fragmentTag.toString());
+            transaction.replace(_container.getId(), fragment, fragmentTag.toString());
 
             //add to back stack
             //_transaction.addToBackStack(fragmentTag); //try set null
 
             //commit
-            _transaction.commit();
+            transaction.commit();
             SystemHelper.logWarning(FragmentHelper.class, String.format("%s Loaded", fragmentTag));
         }
         else
