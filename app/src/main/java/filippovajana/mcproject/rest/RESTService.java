@@ -1,5 +1,8 @@
 package filippovajana.mcproject.rest;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,7 +12,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import filippovajana.mcproject.R;
 import filippovajana.mcproject.activity.LoginActivity;
+import filippovajana.mcproject.activity.MainActivity;
 import filippovajana.mcproject.helper.SystemHelper;
 import filippovajana.mcproject.model.AppFriend;
 import filippovajana.mcproject.model.UserProfile;
@@ -22,7 +27,9 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class RESTService
 {
     private static final String BASE_URL = "https://ewserver.di.unimi.it/mobicomp/geopost/";
+
     private static String SESSION_TOKEN;
+
     private static Retrofit retrofit;
     private static EverywareLabAPI apiService;
 
@@ -44,50 +51,12 @@ public class RESTService
         return SESSION_TOKEN;
     }
 
-    //Login Task
-    public class LoginTask extends AsyncTask<String, Void, Boolean>
+    public static void setSessionToken(String sessionToken)
     {
-
-        private LoginActivity _activity;
-        public LoginTask(LoginActivity activity)
-        {
-            _activity = activity;
-        }
-
-        @Override
-        protected Boolean doInBackground(String... params)
-        {
-            return checkLoginCredentials(params[0], params[1]);
-        }
-        @Override
-        protected void onPostExecute(Boolean result)
-        {
-            _activity.loginCheckHandler(result);
-        }
-
-        private boolean checkLoginCredentials(String username, String password)
-        {
-            //build rest call
-            Call<String> call = RESTService.apiService.getSessionId(username, password);
-
-            //execute call
-            try
-            {
-                Response<String> response = call.execute();
-
-                if (response.isSuccessful())
-                {
-                    SESSION_TOKEN = response.body();
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
+        SESSION_TOKEN = sessionToken;
     }
+
+    //TODO: Login Task
 
 
     //Friends Task

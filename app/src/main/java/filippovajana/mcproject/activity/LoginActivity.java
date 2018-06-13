@@ -1,29 +1,75 @@
 package filippovajana.mcproject.activity;
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import filippovajana.mcproject.R;
 import filippovajana.mcproject.rest.RESTService;
 
 public class LoginActivity extends AppCompatActivity
 {
-
-    //TODO: disable back navigation
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //TODO: check for valid session_id
+
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+
+        //disable login button
+        Button loginButton = findViewById(R.id.userLoginButton);
+        loginButton.setEnabled(false);
+
+        //check stored session token
+        boolean isValid = checkStoredSessionToken();
+        if (isValid)
+            navigateToMainActivity();
+        else
+            //enable login button
+            loginButton.setEnabled(true);
+    }
+
+    private boolean checkStoredSessionToken()
+    {
+        //get stored token
+        String token = getStoredSessionToken();
+
+        if (token == null) //not stored | logout done
+            return false; //do login procedure
+        else //jump login procedure
+        {
+            //set REST service local token
+            RESTService.setSessionToken(token);
+            return true;
+        }
+    }
+
+    private String getStoredSessionToken()
+    {
+        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+        return sharedPreferences.getString(getString(R.string.store_session_token), null);
+    }
+
+    private boolean setStoredSessionToken(String token)
+    {
+        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(getString(R.string.store_session_token), token);
+        return editor.commit();
     }
 
     public void userLoginButton_onClick(View view)
@@ -36,30 +82,15 @@ public class LoginActivity extends AppCompatActivity
         EditText passwordText = (EditText) findViewById(R.id.userPasswordText);
         String password = passwordText.getText().toString();
 
-        //check credentials
-        RESTService restService = new RESTService();
-        RESTService.LoginTask task = new RESTService().new LoginTask(this); //TODO: wrap AsyncTask into a method in RESTService
-        task.execute(username, password);
+        //try login
+        tryLoginAsync();
+
     }
 
-    //Login check result handler
-    public void loginCheckHandler(Boolean result)
+    //TODO: login task
+    private void tryLoginAsync()
     {
-        //display result
-        TextView resultText = (TextView) findViewById(R.id.loginResult);
-        if (result == true)
-        {
-            resultText.setTextColor(Color.GREEN);
-            resultText.setText("Successful");
 
-            //next page
-            navigateToMainActivity();
-        }
-        else
-        {
-            resultText.setTextColor(Color.RED);
-            resultText.setText("Failed");
-        }
     }
 
     private void navigateToMainActivity()
