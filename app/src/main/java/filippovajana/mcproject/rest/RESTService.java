@@ -57,6 +57,36 @@ public class RESTService
     }
 
     //TODO: Login Task
+    public String doLogin(String username, String password)
+    {
+        Call<String> call = apiService.getSessionId(username, password);
+
+        //execute call
+        try
+        {
+            SystemHelper.logWarning(this.getClass(), "Try login");
+
+            Response<String> response = call.execute();
+
+            if (response.isSuccessful())
+            {
+                SystemHelper.logWarning(this.getClass(), "Login successful");
+
+                return response.body();
+            }
+            else
+            {
+                SystemHelper.logWarning(this.getClass(), "Login failed");
+
+                return null;
+            }
+        }catch (Exception e)
+        {
+            SystemHelper.logError(this.getClass(), e.getMessage());
+
+            return null;
+        }
+    }
 
 
     //Friends Task

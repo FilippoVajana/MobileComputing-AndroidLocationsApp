@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,8 +21,6 @@ public class LoginActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-
     }
 
     @Override
@@ -66,6 +65,10 @@ public class LoginActivity extends AppCompatActivity
 
     private boolean setStoredSessionToken(String token)
     {
+        //update REST service session token
+        RESTService.setSessionToken(token);
+
+        //update stored session token
         SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(getString(R.string.store_session_token), token);
@@ -83,16 +86,42 @@ public class LoginActivity extends AppCompatActivity
         String password = passwordText.getText().toString();
 
         //try login
-        tryLoginAsync();
+        tryLoginAsync(username, password);
 
     }
 
     //TODO: login task
-    private void tryLoginAsync()
+    private void tryLoginAsync(String username, String password)
     {
+        Thread task = new Thread(() -> {
+            //rest call
+            String token = new RESTService().doLogin(username, password);
 
+            //check result
+            if (token != null) //login successful
+            {
+                //update stored-local session token
+                setStoredSessionToken(token);
+
+                //navigate to main activity
+                navigateToMainActivity();
+            }
+            else //login failed
+            {
+                showSnackbar("Login failed");
+            }
+        });
+
+        //run task
+        task.start(); //wait completion???
     }
 
+    public void showSnackbar(String message)
+    {
+        View view = findViewById(android.R.id.content);
+        Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE)
+                .show();
+    }
     private void navigateToMainActivity()
     {
         Intent intent = new Intent(this, MainActivity.class);
