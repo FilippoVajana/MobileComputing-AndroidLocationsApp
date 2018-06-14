@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import filippovajana.mcproject.R;
+import filippovajana.mcproject.helper.SystemHelper;
 import filippovajana.mcproject.rest.FollowUserResponse;
 import filippovajana.mcproject.rest.RESTService;
 import filippovajana.mcproject.rest.UsersListResponse;
@@ -109,11 +110,9 @@ public class FriendAddFragment extends Fragment
             UsersListResponse respose = rest.getUsers(prefix, Integer.MAX_VALUE);
 
             if (respose != null)
-                Snackbar.make(_view, "Loading Users List", Snackbar.LENGTH_LONG)
-                .show();
+                SystemHelper.showSnackbar("Loading...");
             else
-                Snackbar.make(_view, "Error", Snackbar.LENGTH_INDEFINITE)
-                        .show();
+                SystemHelper.showSnackbar("Failure");
 
             //update local copy
             updateListContent(_resultList, respose.getUsersList());
@@ -148,12 +147,10 @@ public class FriendAddFragment extends Fragment
 
                 FollowUserResponse response = rest.followUser(username);
 
-                Snackbar.make(_view, response.message, Snackbar.LENGTH_LONG)
-                        .show();
+                SystemHelper.showSnackbar(response.message);
             }catch (Exception e)
             {
-                Snackbar.make(_view, e.getMessage(), Snackbar.LENGTH_INDEFINITE)
-                        .show();
+                SystemHelper.showSnackbar(e.getMessage());
             }
         });
 
@@ -169,6 +166,13 @@ public class FriendAddFragment extends Fragment
         {
 
         }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+        {
+
+        }
+
         @Override
         public void afterTextChanged(Editable editable)
         {
@@ -179,12 +183,6 @@ public class FriendAddFragment extends Fragment
 
             //update result list
             setResultListAsync(queryPrefix);
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
-        {
-
         }
     };
 
