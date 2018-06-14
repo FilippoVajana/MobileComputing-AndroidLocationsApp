@@ -21,6 +21,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         SystemHelper.logError(this.getClass(), "onCreate()");
 
+        //init system helper
+        SystemHelper.setMainView(findViewById(R.id.mainView));
+
         //init bottom navigation
         setupBottomNavigationView();
     }

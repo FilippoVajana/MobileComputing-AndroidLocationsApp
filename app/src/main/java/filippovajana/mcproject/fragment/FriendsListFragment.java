@@ -1,9 +1,6 @@
 package filippovajana.mcproject.fragment;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +9,6 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.SortedSet;
 
 import filippovajana.mcproject.R;
 import filippovajana.mcproject.adapter.AppFriendAdapter;
@@ -73,8 +69,7 @@ public class FriendsListFragment extends Fragment
         listView.setAdapter(adapter);
 
         //check for empty list
-        Snackbar.make(_view, String.format("%d Friends", list.size()), Snackbar.LENGTH_LONG)
-                .show();
+        SystemHelper.showSnackbar(String.format("%d Friends", list.size()));
     }
 
     private void updateFriendsListAsync()
@@ -119,8 +114,7 @@ public class FriendsListFragment extends Fragment
         {
             updateThread.join();
             if (_dataModel.get_friendsList().size() > 0)
-                Snackbar.make(_view, String.format("%d Friends", _dataModel.get_friendsList().size()), Snackbar.LENGTH_INDEFINITE)
-                        .show();
+                SystemHelper.showSnackbar(String.format("%d Friends", _dataModel.get_friendsList().size()));
         }catch (Exception e)
         {
             SystemHelper.logError(this.getClass(), "Exception during friends list update");

@@ -3,9 +3,7 @@ package filippovajana.mcproject.fragment;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +16,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import filippovajana.mcproject.R;
 import filippovajana.mcproject.activity.LoginActivity;
+import filippovajana.mcproject.helper.SystemHelper;
 import filippovajana.mcproject.location.LocationManager;
 import filippovajana.mcproject.model.AppDataModel;
 import filippovajana.mcproject.model.UserProfile;
@@ -103,7 +101,7 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback, OnC
         _locationManager = new LocationManager(this, googleMap);
 
         //request last location
-        _locationManager.getUserLocation(onSuccessListener, onFailureListener);
+        _locationManager.getUserLocation(onSuccessListener, null);
     }
 
 
@@ -116,13 +114,8 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback, OnC
             //check null location
             if ( location == null)
             {
-                onFailureListener.onFailure(new NullPointerException());
-                return;
+                SystemHelper.showSnackbar("Invalid location");
             }
-
-            //display snackbar
-            Snackbar.make(_view, "Location Update", Snackbar.LENGTH_LONG)
-                    .show();
 
             //update location in user profile
             LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
@@ -131,22 +124,6 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback, OnC
             _locationManager.moveToLocation(position);
         }
     };
-    OnFailureListener onFailureListener = new OnFailureListener()
-    {
-        @Override
-        public void onFailure(@NonNull Exception e)
-        {
-            try
-            {
-                //display snackbar
-                Snackbar snackbar = Snackbar.make(_view, "Location Error", Snackbar.LENGTH_LONG);
-                snackbar.show();
-            }catch (Exception ex)
-            {
-            }
-        }
-    };
-
 
     //Profile
     Runnable profileTask = new Runnable()
@@ -161,8 +138,7 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback, OnC
             if (_profile == null)
             {
                 //show error snackbar
-                Snackbar.make(_view, "Error loading user profile", Snackbar.LENGTH_INDEFINITE)
-                        .show();
+                SystemHelper.showSnackbar("Loading failure");
 
                 //init default user
                 _profile = new UserProfile();
@@ -210,20 +186,16 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback, OnC
 
             if (result == true)
             {
-                //TODO: navigate to login page
-                Snackbar.make(_view, "Logout successful", Snackbar.LENGTH_LONG).show();
-
+                //navigate to login page
                 Intent intent = new Intent(this.getActivity(), LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 this.getActivity().finish();
             }
             else
-                Snackbar.make(_view, "Logout failed", Snackbar.LENGTH_LONG).show();
+                SystemHelper.showSnackbar("Logout failure");
         });
         logoutTask.start();
-
-
     }
 }
 
