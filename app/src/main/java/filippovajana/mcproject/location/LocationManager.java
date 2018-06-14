@@ -30,9 +30,11 @@ import java.util.logging.Logger;
 import filippovajana.mcproject.R;
 import filippovajana.mcproject.activity.MainActivity;
 import filippovajana.mcproject.helper.SystemHelper;
+import filippovajana.mcproject.model.AppFriend;
 
 public class LocationManager
 {
+    //view
     private Fragment _fragment;
     private GoogleMap _map;
 
@@ -40,6 +42,8 @@ public class LocationManager
     private LocationRequest _locationRequest;
     private static FusedLocationProviderClient _locationProvider;
 
+    //user location
+    private static Location _userLocation;
 
     public LocationManager(Fragment fragment, GoogleMap map)
     {
@@ -60,6 +64,30 @@ public class LocationManager
 
         //check location settings
         setLocationRequestDefaults();
+
+        //TODO: to be tested
+        //get user location
+        getUserLocation(null, null);
+    }
+
+    public LocationManager(Fragment fragment)
+    {
+        //init fragment
+        _fragment = fragment;
+
+        //init location provider
+        _locationProvider = LocationServices.getFusedLocationProviderClient(_fragment.getContext());
+
+        //check for permissions
+        boolean locationGranted = checkLocationPermission();
+        if (locationGranted == false)
+            requestLocationPermissions();
+
+        //check location settings
+        setLocationRequestDefaults();
+
+        //get user location
+        getUserLocation(null, null);
     }
 
     //Defaults
@@ -118,7 +146,6 @@ public class LocationManager
 
 
 
-
     //Permissions
     private Boolean checkLocationPermission()
     {
@@ -139,9 +166,6 @@ public class LocationManager
     {
         setLocationRequestDefaults();
     }
-
-
-
     private void requestLocationPermissions()
     {
         //request permission
@@ -149,6 +173,8 @@ public class LocationManager
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 _fragment.getResources().getInteger(R.integer.location_permission_request_id));
     }
+
+
 
     //Location
     public Task<Location> getUserLocation(@Nullable OnSuccessListener<Location> onSuccessListener, @Nullable OnFailureListener onFailureListener)
@@ -161,13 +187,13 @@ public class LocationManager
             if (onSuccessListener != null)
                 locationTask.addOnSuccessListener(onSuccessListener);
             else
-                locationTask.addOnSuccessListener(defaultOnSuccessListener);
+                locationTask.addOnSuccessListener(defaultOnSuccessListener); //default
 
             //add failure listener
             if (onFailureListener != null)
                 locationTask.addOnFailureListener(onFailureListener);
             else
-                locationTask.addOnFailureListener(defaultOnFailureListener);
+                locationTask.addOnFailureListener(defaultOnFailureListener); //default
 
             return locationTask;
         }catch (SecurityException s_ex)
@@ -176,6 +202,25 @@ public class LocationManager
             defaultOnFailureListener.onFailure(s_ex);
             return null;
         }
+    }
+    public float getDistanceFromUser(AppFriend friend)
+    {
+        //get user location
+        if (_userLocation == null)
+            return Float.NaN;
+        double uLat = _userLocation.getLatitude();
+        double uLon = _userLocation.getLongitude();
+
+        //get friend location
+        double fLat = friend.getLatitude();
+        double fLon = friend.getLongitude();
+
+        float[] distance = new float[1];
+
+        //compute distance
+        Location.distanceBetween(uLat, uLon, fLat, fLon, distance);
+
+        return distance[0];
     }
 
     //Camera
@@ -188,15 +233,20 @@ public class LocationManager
             }, null);
     }
 
+
+
     //Default Listener
     private OnSuccessListener<Location> defaultOnSuccessListener = new OnSuccessListener<Location>()
     {
         @Override
         public void onSuccess(Location location)
         {
+            //update user location
+            _userLocation = location;
+
             //display snackbar
-            Snackbar snackbar = Snackbar.make(_fragment.getView(), "Success", Snackbar.LENGTH_LONG);
-            snackbar.show();
+            //Snackbar snackbar = Snackbar.make(_fragment.getView(), "Success", Snackbar.LENGTH_LONG);
+            //snackbar.show();
         }
     };
     private OnFailureListener defaultOnFailureListener = new OnFailureListener()

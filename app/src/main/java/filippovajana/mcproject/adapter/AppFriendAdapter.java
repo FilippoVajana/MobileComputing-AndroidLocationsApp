@@ -1,7 +1,6 @@
 package filippovajana.mcproject.adapter;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import filippovajana.mcproject.R;
@@ -50,8 +48,9 @@ public class AppFriendAdapter extends ArrayAdapter<AppFriend>
         nameText.setText(friend.getUsername());
 
         //set distance
+        float distanceKm = friend.getDistanceToUser() / 1000;
         TextView distanceText = (TextView) listItem.findViewById(R.id.textView_distance);
-        //TODO: use geoposition service getDistance()
+        distanceText.setText(String.format("%.1f Km", distanceKm));
 
         //set message
         TextView messageText = (TextView) listItem.findViewById(R.id.textView_message);

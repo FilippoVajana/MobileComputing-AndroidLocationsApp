@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import filippovajana.mcproject.R;
 import filippovajana.mcproject.adapter.AppFriendAdapter;
 import filippovajana.mcproject.helper.SystemHelper;
+import filippovajana.mcproject.location.LocationManager;
 import filippovajana.mcproject.model.AppDataModel;
 import filippovajana.mcproject.model.AppFriend;
 
@@ -51,6 +52,7 @@ public class FriendsListFragment extends Fragment
         // Inflate the layout for this fragment
         _view = inflater.inflate(R.layout.fragment_friends_list, container, false);
 
+
         //set ListView adapter
         setFriendsListAdapter();
 
@@ -80,6 +82,18 @@ public class FriendsListFragment extends Fragment
         {
             //update list
             _dataModel.updateFriendsList();
+
+            //compute distances
+            LocationManager locationManager = new LocationManager(this);
+
+            ArrayList<AppFriend> list = _dataModel.get_friendsList();
+            synchronized (list)
+            {
+                for (AppFriend f : list)
+                {
+                    f.setDistanceToUser(locationManager.getDistanceFromUser(f));
+                }
+            }
         });
 
         //run task
@@ -87,6 +101,9 @@ public class FriendsListFragment extends Fragment
         try
         {
             updateThread.join();
+            if (_dataModel.get_friendsList().size() > 0)
+                Snackbar.make(_view, String.format("%d Friends", _dataModel.get_friendsList().size()), Snackbar.LENGTH_INDEFINITE)
+                        .show();
         }catch (Exception e)
         {
             SystemHelper.logError(this.getClass(), "Exception during friends list update");

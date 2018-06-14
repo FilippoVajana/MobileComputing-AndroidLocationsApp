@@ -19,6 +19,20 @@ public class AppFriend
     @SerializedName("lon")
     private float longitude;
 
+    private float _distanceToUser;
+
+
+
+    public float getDistanceToUser()
+    {
+        return _distanceToUser;
+    }
+
+    public void setDistanceToUser(float _distanceToUser)
+    {
+        this._distanceToUser = _distanceToUser;
+    }
+
     public String getUsername()
     {
         return username;
