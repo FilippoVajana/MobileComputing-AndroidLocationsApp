@@ -94,6 +94,8 @@ public class FriendsListFragment extends Fragment
                     f.setDistanceToUser(locationManager.getDistanceFromUser(f));
                 }
             }
+
+            //TODO: sort list by distance
         });
 
         //run task

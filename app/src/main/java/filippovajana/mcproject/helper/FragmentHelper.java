@@ -12,7 +12,6 @@ import filippovajana.mcproject.fragment.FriendAddFragment;
 import filippovajana.mcproject.fragment.FriendsFragment;
 import filippovajana.mcproject.fragment.FriendsListFragment;
 import filippovajana.mcproject.fragment.FriendsMapFragment;
-import filippovajana.mcproject.fragment.MapFragment;
 import filippovajana.mcproject.fragment.ProfileFragment;
 import filippovajana.mcproject.fragment.StatusUpdateFragment;
 
