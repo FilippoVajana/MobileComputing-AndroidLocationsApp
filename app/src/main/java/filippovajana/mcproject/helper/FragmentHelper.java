@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 import java.util.Hashtable;
 
 import filippovajana.mcproject.fragment.FriendAddFragment;
+import filippovajana.mcproject.fragment.FriendsFragment;
 import filippovajana.mcproject.fragment.MapFragment;
 import filippovajana.mcproject.fragment.ProfileFragment;
 import filippovajana.mcproject.fragment.StatusUpdateFragment;
@@ -16,13 +17,13 @@ import filippovajana.mcproject.fragment.StatusUpdateFragment;
 public class FragmentHelper
 {
     //app fragments dictionary
-    public enum Fragments {PROFILE, STATUS, ADD, MAP}
+    public enum Fragments {PROFILE, STATUS, ADD, FRIENDS}
     private Hashtable<Fragments, Fragment> _fragmentDictionary = new Hashtable()
     {{
         put(Fragments.PROFILE, new ProfileFragment());
         put(Fragments.STATUS, new StatusUpdateFragment());
         put(Fragments.ADD, new FriendAddFragment());
-        put(Fragments.MAP, new MapFragment());
+        put(Fragments.FRIENDS, new FriendsFragment());
     }};
 
     private FragmentManager _manager;

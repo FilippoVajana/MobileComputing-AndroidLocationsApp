@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity
                             _fragmentHelper.loadFragment(FragmentHelper.Fragments.ADD);
                             break;
                         case R.id.action_friends_list:
-                            _fragmentHelper.loadFragment(FragmentHelper.Fragments.MAP); //TODO: change to friends list
+                            _fragmentHelper.loadFragment(FragmentHelper.Fragments.FRIENDS);
                     }
                     return true;
                 });
