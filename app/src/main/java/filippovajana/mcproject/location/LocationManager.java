@@ -20,10 +20,12 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -223,6 +225,8 @@ public class LocationManager
         return distance[0];
     }
 
+
+
     //Camera
     public void moveToLocation(LatLng position)
     {
@@ -232,9 +236,34 @@ public class LocationManager
             _map.animateCamera(CameraUpdateFactory.zoomTo(5), 4000, null); //zoom in
             }, null);
     }
+    public void setCameraBounds(List<AppFriend> friendList)
+    {
+        //check for MapView
+        if (_map == null)
+            return;
+
+        //bounds builder
+        LatLngBounds.Builder builder = LatLngBounds.builder();
+
+        //include user position
+        if (_userLocation != null)
+            builder.include(new LatLng(_userLocation.getLatitude(), _userLocation.getLongitude()));
+
+        //include friends position
+        for (AppFriend f : friendList)
+        {
+            builder.include(new LatLng(f.getLatitude(), f.getLongitude()));
+        }
+
+        //build bounds
+        LatLngBounds bounds = builder.build();
+
+        //set bounds
+        _map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 8));
+    }
 
 
-
+    
     //Default Listener
     private OnSuccessListener<Location> defaultOnSuccessListener = new OnSuccessListener<Location>()
     {
