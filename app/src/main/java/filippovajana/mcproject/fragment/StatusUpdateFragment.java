@@ -2,7 +2,6 @@ package filippovajana.mcproject.fragment;
 
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
@@ -16,7 +15,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import filippovajana.mcproject.R;
@@ -95,7 +93,7 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
         _locationManager = new LocationManager(this, googleMap);
 
         //get last location
-        _locationManager.getUserLocation(onSuccessListener, onFailureListener);
+        _locationManager.getUserLocation(onSuccessListener, null);
     }
 
     //Location operations handlers
@@ -108,9 +106,7 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
             if (location == null)
                 return;
 
-            //display snackbar
-            Snackbar.make(_view, "Location Update Success", Snackbar.LENGTH_LONG)
-                    .show();
+            SystemHelper.showSnackbar("Position updated");
 
             //update location in user profile
             _userPosition = new LatLng(location.getLatitude(), location.getLongitude());
@@ -120,16 +116,6 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
 
             //enable send button
             _view.findViewById(R.id.statusMessageSendButton).setEnabled(true);
-        }
-    };
-    OnFailureListener onFailureListener = new OnFailureListener()
-    {
-        @Override
-        public void onFailure(@NonNull Exception e)
-        {
-            //display snackbar
-            Snackbar snackbar = Snackbar.make(_view, "Location Update Failure", Snackbar.LENGTH_LONG);
-            snackbar.show();
         }
     };
 
@@ -164,7 +150,7 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
             _locationManager.promptLocationSettingsChange();
 
             //get location
-            _locationManager.getUserLocation(onSuccessListener, onFailureListener);
+            _locationManager.getUserLocation(onSuccessListener, null);
             return;
         }
 
@@ -181,14 +167,13 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
             AppDataModel.getInstance().set_userProfile(profile); //also update remote profile
 
             //show snackbar
-            Snackbar.make(_view, "Status Updated", Snackbar.LENGTH_LONG).show();
+            SystemHelper.showSnackbar("Status updated");
 
             //clear message text
             EditText messageText = _view.findViewById(R.id.statusMessageEditText);
-            messageText.setText("");
+            _view.post(() -> messageText.setText(""));
+
         });
         updateTask.start();
     }
-
-
 }

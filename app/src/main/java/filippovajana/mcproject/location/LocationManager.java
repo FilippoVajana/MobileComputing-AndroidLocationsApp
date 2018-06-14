@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 
@@ -26,11 +25,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import filippovajana.mcproject.R;
-import filippovajana.mcproject.activity.MainActivity;
 import filippovajana.mcproject.helper.SystemHelper;
 import filippovajana.mcproject.model.AppFriend;
 
@@ -272,10 +268,6 @@ public class LocationManager
         {
             //update user location
             _userLocation = location;
-
-            //display snackbar
-            //Snackbar snackbar = Snackbar.make(_fragment.getView(), "Success", Snackbar.LENGTH_LONG);
-            //snackbar.show();
         }
     };
     private OnFailureListener defaultOnFailureListener = new OnFailureListener()
@@ -284,8 +276,7 @@ public class LocationManager
         public void onFailure(@NonNull Exception e)
         {
             //display snackbar
-            Snackbar snackbar = Snackbar.make(_fragment.getView(), "Failure", Snackbar.LENGTH_LONG);
-            snackbar.show();
+            SystemHelper.showSnackbar("Location Service Failure");
         }
     };
 

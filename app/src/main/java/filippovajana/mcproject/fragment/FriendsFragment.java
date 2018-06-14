@@ -2,23 +2,14 @@ package filippovajana.mcproject.fragment;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import filippovajana.mcproject.R;
-import filippovajana.mcproject.adapter.AppFriendAdapter;
 import filippovajana.mcproject.helper.FragmentHelper;
-import filippovajana.mcproject.helper.SystemHelper;
-import filippovajana.mcproject.model.AppDataModel;
-import filippovajana.mcproject.model.AppFriend;
 
 public class FriendsFragment extends Fragment
 {
@@ -56,7 +47,6 @@ public class FriendsFragment extends Fragment
     public void onStart()
     {
         super.onStart();
-
 
         //load friends list nested fragment
         FragmentHelper helper = new FragmentHelper(getChildFragmentManager(), _view.findViewById(R.id.fragmentContainer));
