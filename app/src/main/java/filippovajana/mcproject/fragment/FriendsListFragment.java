@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.SortedSet;
 
 import filippovajana.mcproject.R;
 import filippovajana.mcproject.adapter.AppFriendAdapter;
@@ -95,7 +97,20 @@ public class FriendsListFragment extends Fragment
                 }
             }
 
+
             //TODO: sort list by distance
+            list.sort((Comparator<AppFriend>) (item1, item2) -> {
+                //less
+                if (item1.getDistanceToUser() < item2.getDistanceToUser())
+                    return -1;
+
+                //greater
+                if (item1.getDistanceToUser() > item2.getDistanceToUser())
+                    return 1;
+
+                //equal
+                return 0;
+            });
         });
 
         //run task
