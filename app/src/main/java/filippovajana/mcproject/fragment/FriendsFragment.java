@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import filippovajana.mcproject.R;
 import filippovajana.mcproject.adapter.AppFriendAdapter;
+import filippovajana.mcproject.helper.FragmentHelper;
 import filippovajana.mcproject.helper.SystemHelper;
 import filippovajana.mcproject.model.AppDataModel;
 import filippovajana.mcproject.model.AppFriend;
@@ -20,9 +21,6 @@ public class FriendsFragment extends Fragment
 {
     //view
     View _view;
-
-    //data model
-    AppDataModel _dataModel;
 
     public FriendsFragment()
     {
@@ -35,11 +33,14 @@ public class FriendsFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
 
+/*
         //init data model
         _dataModel = AppDataModel.getInstance();
 
         //update friends list
         updateFriendsListAsync();
+*/
+
     }
 
     @Override
@@ -47,50 +48,23 @@ public class FriendsFragment extends Fragment
                              Bundle savedInstanceState)
     {
         // Inflate the layout for this fragment
-        _view = inflater.inflate(R.layout.fragment_friends_list, container, false);
+        _view = inflater.inflate(R.layout.fragment_friends, container, false);
+
+        //load friends list nested fragment
+        FragmentHelper helper = new FragmentHelper(getChildFragmentManager(), _view.findViewById(R.id.fragmentContainer));
+        helper.loadFragment(FragmentHelper.Fragments.LIST);
 
 
+
+        /*
         //set ListView adapter
         setFriendsListAdapter();
+*/
 
         return _view;
     }
 
 
-    private void setFriendsListAdapter()
-    {
-        ArrayList<AppFriend> list = _dataModel.get_friendsList();
 
-        //build list adapter
-        AppFriendAdapter adapter = new AppFriendAdapter(this.getActivity(), list);
-
-        //set list adapter
-        ListView listView = (ListView) _view.findViewById(R.id.friendsListView);
-        listView.setAdapter(adapter);
-
-        //check for empty list
-        Snackbar.make(_view, String.format("%d Friends", list.size()), Snackbar.LENGTH_LONG)
-                .show();
-    }
-
-    private void updateFriendsListAsync()
-    {
-        //build task
-        Thread updateThread = new Thread(() ->
-        {
-            //update list
-            _dataModel.updateFriendsList();
-        });
-
-        //run task
-        updateThread.start();
-        try
-        {
-            updateThread.join();
-        }catch (Exception e)
-        {
-            SystemHelper.logError(this.getClass(), "Exception during friends list update");
-        }
-    }
 
 }

@@ -10,6 +10,8 @@ import java.util.Hashtable;
 
 import filippovajana.mcproject.fragment.FriendAddFragment;
 import filippovajana.mcproject.fragment.FriendsFragment;
+import filippovajana.mcproject.fragment.FriendsListFragment;
+import filippovajana.mcproject.fragment.FriendsMapFragment;
 import filippovajana.mcproject.fragment.MapFragment;
 import filippovajana.mcproject.fragment.ProfileFragment;
 import filippovajana.mcproject.fragment.StatusUpdateFragment;
@@ -17,13 +19,15 @@ import filippovajana.mcproject.fragment.StatusUpdateFragment;
 public class FragmentHelper
 {
     //app fragments dictionary
-    public enum Fragments {PROFILE, STATUS, ADD, FRIENDS}
+    public enum Fragments {PROFILE, STATUS, ADD, FRIENDS, LIST, MAP}
     private Hashtable<Fragments, Fragment> _fragmentDictionary = new Hashtable()
     {{
         put(Fragments.PROFILE, new ProfileFragment());
         put(Fragments.STATUS, new StatusUpdateFragment());
         put(Fragments.ADD, new FriendAddFragment());
         put(Fragments.FRIENDS, new FriendsFragment());
+        put(Fragments.LIST, new FriendsListFragment());
+        put(Fragments.MAP, new FriendsMapFragment());
     }};
 
     private FragmentManager _manager;
