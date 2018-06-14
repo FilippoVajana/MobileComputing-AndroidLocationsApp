@@ -263,7 +263,7 @@ public class LocationManager
     }
 
 
-    
+
     //Default Listener
     private OnSuccessListener<Location> defaultOnSuccessListener = new OnSuccessListener<Location>()
     {
