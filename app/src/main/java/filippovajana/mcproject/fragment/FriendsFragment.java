@@ -19,7 +19,7 @@ public class FriendsFragment extends Fragment
 
     //last fragment loaded
     private FragmentHelper _fragmentHelper;
-    private FragmentHelper.Fragments _lastLoaded;
+    private static FragmentHelper.Fragments _lastLoaded;
 
     public FriendsFragment()
     {

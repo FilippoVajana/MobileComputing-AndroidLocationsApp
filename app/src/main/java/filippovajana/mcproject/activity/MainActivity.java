@@ -39,14 +39,14 @@ public class MainActivity extends AppCompatActivity
         _fragmentHelper = new FragmentHelper(this.getSupportFragmentManager(), findViewById(R.id.fragment_container));
 
         //reload last fragment
-        if (FragmentHelper.loadedFragment == null)
+        if (_lastFragment == null)
         {
-            //TODO: load friends list
-            _fragmentHelper.loadFragment(FragmentHelper.Fragments.PROFILE);
+            _fragmentHelper.loadFragment(FragmentHelper.Fragments.FRIENDS);
         }
         else
         {
-            _fragmentHelper.loadFragment(FragmentHelper.loadedFragment);
+            //TODO: check load on back button press
+            _fragmentHelper.loadFragment(_lastFragment);
         }
     }
 
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity
         //reset loaded fragment
         _lastFragment = FragmentHelper.loadedFragment;
 
-        FragmentHelper.loadedFragment = FragmentHelper.Fragments.PROFILE; //enforce navigation schema
+        FragmentHelper.loadedFragment = FragmentHelper.Fragments.FRIENDS; //force navigation entry point
         SystemHelper.logError(this.getClass(), "onStop()");
     }
 
@@ -74,8 +74,6 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy()
     {
         super.onDestroy();
-        //device orientation hack
-        //FragmentHelper.loadedFragment = _lastFragment;
         SystemHelper.logError(this.getClass(), "onDestroy()");
     }
 

@@ -115,7 +115,14 @@ public class FriendAddFragment extends Fragment
                 SystemHelper.showSnackbar("Failure");
 
             //update local copy
-            updateListContent(_resultList, respose.getUsersList());
+            try
+            {
+                updateListContent(_resultList, respose.getUsersList());
+            }catch (Exception e)
+            {
+                SystemHelper.showSnackbar("Retry update");
+                setResultListAsync(prefix);
+            }
         });
 
         //start task
