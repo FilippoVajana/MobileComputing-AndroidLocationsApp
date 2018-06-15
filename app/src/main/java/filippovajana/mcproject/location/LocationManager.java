@@ -64,7 +64,6 @@ public class LocationManager
         //check location settings
         setLocationRequestDefaults();
 
-        //TODO: to be tested
         //get user location
         getUserLocation(null, null);
     }
@@ -96,7 +95,7 @@ public class LocationManager
         try
         {
             _map.setMyLocationEnabled(true);
-            //_map.setMinZoomPreference(15); //minimum zoom level set to "Streets"
+            _map.getUiSettings().setMapToolbarEnabled(false);
         }
         catch (SecurityException s_ex)
         {
