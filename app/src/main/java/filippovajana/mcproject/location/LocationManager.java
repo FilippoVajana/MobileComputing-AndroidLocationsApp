@@ -88,6 +88,27 @@ public class LocationManager
         getUserLocation(null, null);
     }
 
+
+    //Pattern Observer
+    private UserLocationUpdateListener _listener = null;
+    public void setUserLocationUpdateListener(UserLocationUpdateListener listener)
+    {
+        this._listener = listener;
+        SystemHelper.logWarning(this.getClass(), "UserLocationUpdateListener set");
+    }
+
+    private void notifyUserLocationUpdate()
+    {
+        if (_listener != null)
+        {
+            _listener.updateCallback();
+
+            SystemHelper.logWarning(this.getClass(), "UserLocationUpdateListener notified");
+        }
+    }
+
+
+
     //Defaults
     private void setMapDefaults()
     {
@@ -272,7 +293,6 @@ public class LocationManager
     }
 
 
-
     //Default Listener
     private OnSuccessListener<Location> defaultOnSuccessListener = new OnSuccessListener<Location>()
     {
@@ -281,6 +301,9 @@ public class LocationManager
         {
             //update user location
             _userLocation = location;
+
+            //notify
+            notifyUserLocationUpdate();
         }
     };
     private OnFailureListener defaultOnFailureListener = new OnFailureListener()
