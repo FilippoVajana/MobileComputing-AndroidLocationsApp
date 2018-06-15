@@ -50,28 +50,11 @@ public class LocationManager
         _fragment = fragment;
 
         //init map
-        _map = map;
-        setMapDefaults();
-
-        //init location provider
-        _locationProvider = LocationServices.getFusedLocationProviderClient(_fragment.getContext());
-
-        //check for permissions
-        boolean locationGranted = checkLocationPermission();
-        if (locationGranted == false)
-            requestLocationPermissions();
-
-        //check location settings
-        setLocationRequestDefaults();
-
-        //get user location
-        getUserLocation(null, null);
-    }
-
-    public LocationManager(Fragment fragment)
-    {
-        //init fragment
-        _fragment = fragment;
+        if (map != null)
+        {
+            _map = map;
+            setMapDefaults();
+        }
 
         //init location provider
         _locationProvider = LocationServices.getFusedLocationProviderClient(_fragment.getContext());
