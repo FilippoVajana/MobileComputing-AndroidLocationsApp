@@ -1,6 +1,10 @@
 package filippovajana.mcproject.rest;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -8,7 +12,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import filippovajana.mcproject.R;
 import filippovajana.mcproject.activity.LoginActivity;
+import filippovajana.mcproject.activity.MainActivity;
+import filippovajana.mcproject.helper.SystemHelper;
 import filippovajana.mcproject.model.AppFriend;
 import filippovajana.mcproject.model.UserProfile;
 import retrofit2.Call;
@@ -20,7 +27,9 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class RESTService
 {
     private static final String BASE_URL = "https://ewserver.di.unimi.it/mobicomp/geopost/";
-    private static String SESSION_TOKEN; //fv:fv
+
+    private static String SESSION_TOKEN;
+
     private static Retrofit retrofit;
     private static EverywareLabAPI apiService;
 
@@ -42,52 +51,40 @@ public class RESTService
         return SESSION_TOKEN;
     }
 
-
-    //TODO: on response trigger a popup in main activity
-
-
-    //Login Task
-    public class LoginTask extends AsyncTask<String, Void, Boolean>
+    public static void setSessionToken(String sessionToken)
     {
+        SESSION_TOKEN = sessionToken;
+    }
 
-        private LoginActivity _activity;
-        public LoginTask(LoginActivity activity)
-        {
-            _activity = activity;
-        }
+    //TODO: Login Task
+    public String doLogin(String username, String password)
+    {
+        Call<String> call = apiService.getSessionId(username, password);
 
-        @Override
-        protected Boolean doInBackground(String... params)
+        //execute call
+        try
         {
-            return checkLoginCredentials(params[0], params[1]);
-        }
-        @Override
-        protected void onPostExecute(Boolean result)
-        {
-            _activity.loginCheckHandler(result);
-        }
+            SystemHelper.logWarning(this.getClass(), "Try login");
 
-        private boolean checkLoginCredentials(String username, String password)
-        {
-            //build rest call
-            Call<String> call = RESTService.apiService.getSessionId(username, password);
+            Response<String> response = call.execute();
 
-            //execute call
-            try
+            if (response.isSuccessful())
             {
-                Response<String> response = call.execute();
+                SystemHelper.logWarning(this.getClass(), "Login successful");
 
-                if (response.isSuccessful())
-                {
-                    SESSION_TOKEN = response.body();
-                    return true;
-                }
-                return false;
+                return response.body();
             }
-            catch (Exception ex)
+            else
             {
-                return false;
+                SystemHelper.logWarning(this.getClass(), "Login failed");
+
+                return null;
             }
+        }catch (Exception e)
+        {
+            SystemHelper.logError(this.getClass(), e.getMessage());
+
+            return null;
         }
     }
 
@@ -108,25 +105,58 @@ public class RESTService
 
             if (response.isSuccessful())
             {
-                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "getFriendsList Successful");
+                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "getUsersList Successful");
                 return response.body().getFriendsList();
             }
             else
             {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "getFriendsList Failed");
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "getUsersList Failed");
                 return new ArrayList<>();
             }
 
         }catch (Exception e)
         {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "getFriendsList Exception ");
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "getUsersList Exception ");
             e.printStackTrace();
             return new ArrayList<>();
         }
     }
 
-    @Nullable
+
+    //Users Task
+    public UsersListResponse getUsers(String prefix, int limit)
+    {
+        //build rest call
+        Call<UsersListResponse> call = apiService.getUsers(
+                getSessionToken(),
+                prefix,
+                limit);
+
+        //execute call
+        try
+        {
+            Response<UsersListResponse> response = call.execute();
+
+            if (response.isSuccessful())
+            {
+                SystemHelper.logWarning(this.getClass(), "Retrieve users successful");
+                return response.body();
+            }
+            else
+            {
+                SystemHelper.logWarning(this.getClass(), "Retrieve users failed");
+                return new UsersListResponse();
+            }
+
+        }catch (Exception e)
+        {
+            SystemHelper.logError(this.getClass(), String.format("Logout %s", e.getMessage()));
+            return null;
+        }
+    }
+
     //Profile Task
+    @Nullable
     public UserProfile getUserProfile()
     {
         //get session id
@@ -197,6 +227,65 @@ public class RESTService
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "updateUserStatus Exception ");
             e.printStackTrace();
             return;
+        }
+    }
+
+
+    //Logout Task
+    public boolean logoutUser()
+    {
+        //build rest call
+        Call<Void> call = apiService.logoutUser(getSessionToken());
+
+        //execute call
+        try
+        {
+            Response<Void> response = call.execute();
+
+            if (response.isSuccessful())
+            {
+                SystemHelper.logWarning(this.getClass(), "Logout successful");
+                return true;
+            }
+            else
+            {
+                SystemHelper.logWarning(this.getClass(), "Logout failed");
+                return false;
+            }
+
+        }catch (Exception e)
+        {
+            SystemHelper.logError(this.getClass(), String.format("Logout %s", e.getMessage()));
+            return false;
+        }
+    }
+
+    //Follow User Task
+    public FollowUserResponse followUser(@NonNull String username)
+    {
+        //build rest call
+        Call<String> call = apiService.followUser(getSessionToken(), username);
+
+        //execute call
+        try
+        {
+            Response<String> response = call.execute();
+
+            if (response.isSuccessful())
+            {
+                SystemHelper.logWarning(this.getClass(), "Follow user successful");
+                return new FollowUserResponse("Success");
+            }
+            else
+            {
+                SystemHelper.logWarning(this.getClass(), "Follow user failed");
+                return new FollowUserResponse(response.errorBody().string());
+            }
+
+        }catch (Exception e)
+        {
+            SystemHelper.logError(this.getClass(), String.format("Follow user %s", e.getMessage()));
+            return null;
         }
     }
 }

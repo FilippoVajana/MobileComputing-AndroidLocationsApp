@@ -1,8 +1,5 @@
 package filippovajana.mcproject.rest;
 
-import java.util.List;
-
-import filippovajana.mcproject.model.AppFriend;
 import filippovajana.mcproject.model.UserProfile;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -26,9 +23,24 @@ public interface EverywareLabAPI
     @GET("profile/")
     Call<UserProfile> getUserProfile(@Query("session_id") String sessionId);
 
+
     @GET("status_update/")
     Call<Void> updateUserStatus(@Query("session_id") String sessionId,
                                 @Query("message") String message,
                                 @Query("lat") String latitude,
                                 @Query("lon") String longitude);
+
+
+    @GET("logout/")
+    Call<Void> logoutUser(@Query("session_id") String sessionId);
+
+
+    @GET("users/")
+    Call<UsersListResponse> getUsers(@Query("session_id") String sessionId,
+                                     @Query("usernamestart") String namePrefix,
+                                     @Query("limit") Integer resultLimit);
+
+    @GET("follow/")
+    Call<String> followUser(@Query("session_id") String sessioId,
+                            @Query("username") String username);
 }
