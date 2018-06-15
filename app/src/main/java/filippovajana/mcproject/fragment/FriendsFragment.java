@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import filippovajana.mcproject.R;
 import filippovajana.mcproject.helper.FragmentHelper;
+import filippovajana.mcproject.location.LocationManager;
 
 public class FriendsFragment extends Fragment
 {

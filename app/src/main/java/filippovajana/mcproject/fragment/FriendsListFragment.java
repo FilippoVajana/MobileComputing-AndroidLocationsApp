@@ -14,13 +14,15 @@ import filippovajana.mcproject.R;
 import filippovajana.mcproject.adapter.AppFriendAdapter;
 import filippovajana.mcproject.helper.SystemHelper;
 import filippovajana.mcproject.location.LocationManager;
+import filippovajana.mcproject.location.UserLocationUpdateListener;
 import filippovajana.mcproject.model.AppDataModel;
 import filippovajana.mcproject.model.AppFriend;
 
-public class FriendsListFragment extends Fragment
+public class FriendsListFragment extends Fragment implements UserLocationUpdateListener
 {
     //view
     View _view;
+    AppFriendAdapter _listAdapter;
 
     //data model
     AppDataModel _dataModel;
@@ -62,13 +64,16 @@ public class FriendsListFragment extends Fragment
         ArrayList<AppFriend> list = _dataModel.get_friendsList();
 
         //build list adapter
-        AppFriendAdapter adapter = new AppFriendAdapter(this.getActivity(), list);
+        _listAdapter = new AppFriendAdapter(this.getActivity(), list);
 
         //set list adapter
-        ListView listView = (ListView) _view.findViewById(R.id.friendsListView);
-        listView.setAdapter(adapter);
+        ListView listView = _view.findViewById(R.id.friendsListView);
+        listView.setAdapter(_listAdapter);
 
-        //check for empty list
+        //init location service
+        new LocationManager(this).setUserLocationUpdateListener(this);
+
+
         SystemHelper.showSnackbar(String.format("%d Friends", list.size()));
     }
 
@@ -92,8 +97,7 @@ public class FriendsListFragment extends Fragment
                 }
             }
 
-
-            //TODO: sort list by distance
+            //sort list by distance
             list.sort((Comparator<AppFriend>) (item1, item2) -> {
                 //less
                 if (item1.getDistanceToUser() < item2.getDistanceToUser())
@@ -106,6 +110,10 @@ public class FriendsListFragment extends Fragment
                 //equal
                 return 0;
             });
+
+            //notify list adapter
+            if (_listAdapter != null)
+                _listAdapter.notifyDataSetChanged();
         });
 
         //run task
@@ -119,5 +127,12 @@ public class FriendsListFragment extends Fragment
         {
             SystemHelper.logError(this.getClass(), "Exception during friends list update");
         }
+    }
+
+    @Override
+    public void updateCallback()
+    {
+        //force list update
+        updateFriendsListAsync();
     }
 }
