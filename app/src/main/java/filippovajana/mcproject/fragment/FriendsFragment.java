@@ -17,6 +17,10 @@ public class FriendsFragment extends Fragment
     private View _view;
     private FloatingActionButton _floatingButton;
 
+    //last fragment loaded
+    private FragmentHelper _fragmentHelper;
+    private static FragmentHelper.Fragments _lastLoaded;
+
     public FriendsFragment()
     {
         // Required empty public constructor
@@ -49,8 +53,27 @@ public class FriendsFragment extends Fragment
         super.onStart();
 
         //load friends list nested fragment
-        FragmentHelper helper = new FragmentHelper(getChildFragmentManager(), _view.findViewById(R.id.fragmentContainer));
-        helper.loadFragment(FragmentHelper.Fragments.LIST);
+        _fragmentHelper = new FragmentHelper(getChildFragmentManager(), _view.findViewById(R.id.fragmentContainer));
+        if (_lastLoaded == null)
+        {
+            _fragmentHelper.loadFragment(FragmentHelper.Fragments.LIST);
+        }
+        else
+        {
+            //set floating button icon
+            if (_lastLoaded == FragmentHelper.Fragments.LIST)
+            {
+                //switch button icon
+                _floatingButton.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_map_black_24dp));
+            }
+            else
+            {
+                //switch button icon
+                _floatingButton.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_list_black_24dp));
+            }
+
+            _fragmentHelper.loadFragment(_lastLoaded);
+        }
     }
 
 
@@ -63,14 +86,16 @@ public class FriendsFragment extends Fragment
             Fragment fragment = getChildFragmentManager().getFragments().get(0);
 
             //change view mode
-            FragmentHelper helper = new FragmentHelper(getChildFragmentManager(), _view.findViewById(R.id.fragmentContainer));
             if (fragment instanceof FriendsListFragment)
             {
                 //switch button icon
                 _floatingButton.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_list_black_24dp));
 
                 //load new fragment
-                helper.loadFragment(FragmentHelper.Fragments.MAP);
+                _fragmentHelper.loadFragment(FragmentHelper.Fragments.MAP);
+
+                //set fragment flag
+                _lastLoaded = FragmentHelper.Fragments.MAP;
             }
             else
             {
@@ -78,7 +103,10 @@ public class FriendsFragment extends Fragment
                 _floatingButton.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_map_black_24dp));
 
                 //load new fragment
-                helper.loadFragment(FragmentHelper.Fragments.LIST);
+                _fragmentHelper.loadFragment(FragmentHelper.Fragments.LIST);
+
+                //set fragment flag
+                _lastLoaded = FragmentHelper.Fragments.LIST;
             }
         }
     };

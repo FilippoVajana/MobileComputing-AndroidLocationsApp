@@ -20,6 +20,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -63,7 +64,6 @@ public class LocationManager
         //check location settings
         setLocationRequestDefaults();
 
-        //TODO: to be tested
         //get user location
         getUserLocation(null, null);
     }
@@ -95,7 +95,7 @@ public class LocationManager
         try
         {
             _map.setMyLocationEnabled(true);
-            //_map.setMinZoomPreference(15); //minimum zoom level set to "Streets"
+            _map.getUiSettings().setMapToolbarEnabled(false);
         }
         catch (SecurityException s_ex)
         {
@@ -222,6 +222,19 @@ public class LocationManager
     }
 
 
+    //Markers
+    public void drawUsersMarkers(List<AppFriend> friendList)
+    {
+        for (AppFriend f : friendList)
+        {
+            LatLng position = new LatLng(f.getLatitude(), f.getLongitude());
+            MarkerOptions opt = new MarkerOptions()
+                    .position(position)
+                    .title(f.getUsername())
+                    .snippet(f.getMessage());
+            _map.addMarker(opt);
+        }
+    }
 
     //Camera
     public void moveToLocation(LatLng position)
@@ -255,7 +268,7 @@ public class LocationManager
         LatLngBounds bounds = builder.build();
 
         //set bounds
-        _map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 8));
+        _map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 80));
     }
 
 

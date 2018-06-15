@@ -43,24 +43,13 @@ public class FragmentHelper
         //init fragment container
         _container = container;
     }
-//
-//    public static FragmentHelper getInstance(FragmentManager baseManager, FrameLayout baseContainer)
-//    {
-//
-//        if (_instance == null)
-//        {
-//            _instance = new FragmentHelper(baseManager, baseContainer);
-//        }
-//
-//        return _instance;
-//    }
 
     public static Fragments loadedFragment = null;
     public void loadFragment(Fragments fragmentTag)
     {
         //build fragment instance
         Fragment fragment = _fragmentDictionary.get(fragmentTag);
-        SystemHelper.logWarning(FragmentHelper.class, String.format("Fragment tag: %s", fragment.getTag()));
+        SystemHelper.logWarning(FragmentHelper.class, String.format("Fragment tag: %s", fragmentTag));
 
 
         //ensure current transaction finishes
@@ -80,7 +69,10 @@ public class FragmentHelper
             SystemHelper.logWarning(FragmentHelper.class, String.format("%s Loaded", fragmentTag));
 
             //update loaded fragment variable
-            loadedFragment = fragmentTag;
+            if (fragmentTag == Fragments.LIST || fragmentTag == Fragments.MAP)
+                loadedFragment = Fragments.FRIENDS;
+            else
+                loadedFragment = fragmentTag;
         }
         else
         {
