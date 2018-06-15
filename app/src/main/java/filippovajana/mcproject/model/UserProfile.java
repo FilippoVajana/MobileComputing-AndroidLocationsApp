@@ -17,8 +17,8 @@ public class UserProfile
     {
         _username = "Marco Tullio Cicerone";
         _stateMessage = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dui diam, semper a turpis eget, dictum fermentum risus. Praesent vel.";
-        _latitude = 0f;
-        _longitude = 0f;
+        _latitude = 45.464211f;
+        _longitude = 9.191383f;
     }
 
     public String get_username()
