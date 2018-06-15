@@ -7,9 +7,16 @@
     android:tag="Status Update Fragment"
     style="@style/AppTheme">
 
-    <RelativeLayout
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:layout_marginTop="@dimen/activity_vertical_margin">
 
         <android.support.design.widget.TextInputLayout
@@ -45,9 +52,15 @@
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/inputLayout"
-            android:layout_marginTop="20dp">
+            android:layout_height="800dp"
+            android:layout_marginTop="16dp"
+            android:layout_below="@id/inputLayout">
+
         </com.google.android.gms.maps.MapView>
-    </RelativeLayout>
+    </LinearLayout>
+
+
+    </ScrollView>
+
+
 </android.support.design.widget.CoordinatorLayout>

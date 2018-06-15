@@ -113,7 +113,7 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
 
             //notify list adapter
             if (_listAdapter != null)
-                _listAdapter.notifyDataSetChanged();
+                _view.post(() -> _listAdapter.notifyDataSetChanged());
         });
 
         //run task
