@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import filippovajana.mcproject.helper.SystemHelper;
+import filippovajana.mcproject.location.LocationManager;
 import filippovajana.mcproject.rest.RESTService;
 
 public class AppDataModel
@@ -83,15 +85,17 @@ public class AppDataModel
         synchronized (_friendsList)
         {
             //empty list
-            _friendsList.removeAll(new ArrayList<>(_friendsList));
+            _friendsList.clear();
 
             //fill list
             for (AppFriend f : list)
             {
+                //compute distance to user
+
                 _friendsList.add(f);
 
                 //log
-                Logger.getLogger(getClass().getName()).log(Level.INFO, String.format("Added friend %s", f.getUsername()));
+                SystemHelper.logWarning(this.getClass(), String.format("Added %s", f.getUsername()));
             }
         }
     }

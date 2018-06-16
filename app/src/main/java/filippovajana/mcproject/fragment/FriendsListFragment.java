@@ -1,5 +1,6 @@
 package filippovajana.mcproject.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import filippovajana.mcproject.R;
 import filippovajana.mcproject.adapter.AppFriendAdapter;
@@ -27,6 +29,9 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
     //data model
     AppDataModel _dataModel;
 
+    //location
+    private LocationManager _location;
+
     public FriendsListFragment()
     {
         // Required empty public constructor
@@ -41,8 +46,8 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
         //init data model
         _dataModel = AppDataModel.getInstance();
 
-        //update friends list
-        updateFriendsListAsync();
+        //init location service
+        _location = new LocationManager(this, null);
     }
 
     @Override
@@ -52,12 +57,52 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
         // Inflate the layout for this fragment
         _view = inflater.inflate(R.layout.fragment_friends_list, container, false);
 
+        //update friends list
+        updateFriendsListAsync();
 
         //set ListView adapter
         setFriendsListAdapter();
 
+        //set on user location update event handler
+        _location.setUserLocationUpdateListener(this);
         return _view;
     }
+
+
+    private void updateFriendsListAsync()
+    {
+        //build task
+        Thread updateThread = new Thread(() ->
+        {
+            //update list
+            _dataModel.updateFriendsList();
+            ArrayList<AppFriend> list = _dataModel.get_friendsList();
+
+            //set distance to user
+            setDistanceToUser(list);
+
+            //sort list by distance
+            sortByDistance(list);
+
+
+            //notify list adapter
+            if (_listAdapter != null)
+                _view.post(() -> _listAdapter.notifyDataSetChanged());
+        });
+
+        //run task
+        updateThread.start();
+        try
+        {
+            updateThread.join();
+        }
+        catch (Exception e)
+        {
+            SystemHelper.logError(this.getClass(), "Exception during friends list update");
+        }
+    }
+
+
 
     private void setFriendsListAdapter()
     {
@@ -70,69 +115,52 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
         ListView listView = _view.findViewById(R.id.friendsListView);
         listView.setAdapter(_listAdapter);
 
-        //init location service
-        new LocationManager(this).setUserLocationUpdateListener(this);
-
-
-        SystemHelper.showSnackbar(String.format("%d Friends", list.size()));
+        //show list size snackbar
+        SystemHelper.showSnackbar(String.format("%d Friends", _dataModel.get_friendsList().size()));
     }
 
-    private void updateFriendsListAsync()
+
+    private void setDistanceToUser(List<AppFriend> list)
     {
-        //build task
-        Thread updateThread = new Thread(() ->
-        {
-            //update list
-            _dataModel.updateFriendsList();
+        if (list == null)
+            return;
 
+        //compute distance
+        synchronized (list)
+        {
             //compute distances
-            LocationManager locationManager = new LocationManager(this);
-
-            ArrayList<AppFriend> list = _dataModel.get_friendsList();
-            synchronized (list)
+            for (AppFriend f : list)
             {
-                for (AppFriend f : list)
-                {
-                    f.setDistanceToUser(locationManager.getDistanceFromUser(f));
-                }
+                f.setDistanceToUser(_location.getDistanceFromUser(f));
             }
-
-            //sort list by distance
-            list.sort((Comparator<AppFriend>) (item1, item2) -> {
-                //less
-                if (item1.getDistanceToUser() < item2.getDistanceToUser())
-                    return -1;
-
-                //greater
-                if (item1.getDistanceToUser() > item2.getDistanceToUser())
-                    return 1;
-
-                //equal
-                return 0;
-            });
-
-            //notify list adapter
-            if (_listAdapter != null)
-                _view.post(() -> _listAdapter.notifyDataSetChanged());
-        });
-
-        //run task
-        updateThread.start();
-        try
-        {
-            updateThread.join();
-            if (_dataModel.get_friendsList().size() > 0)
-                SystemHelper.showSnackbar(String.format("%d Friends", _dataModel.get_friendsList().size()));
-        }catch (Exception e)
-        {
-            SystemHelper.logError(this.getClass(), "Exception during friends list update");
         }
     }
+
+    private void sortByDistance(List<AppFriend> list)
+    {
+        if (list == null)
+            return;
+
+        //sort list by distance
+        list.sort((Comparator<AppFriend>) (item1, item2) -> {
+            //less
+            if (item1.getDistanceToUser() < item2.getDistanceToUser())
+                return -1;
+
+            //greater
+            if (item1.getDistanceToUser() > item2.getDistanceToUser())
+                return 1;
+
+            //equal
+            return 0;
+        });
+    }
+
 
     @Override
     public void updateCallback()
     {
-        //force list update
+        //update
         updateFriendsListAsync();
     }
 }
