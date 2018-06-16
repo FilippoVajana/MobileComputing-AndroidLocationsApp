@@ -1,9 +1,5 @@
 package filippovajana.mcproject.rest;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -12,9 +8,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import filippovajana.mcproject.R;
-import filippovajana.mcproject.activity.LoginActivity;
-import filippovajana.mcproject.activity.MainActivity;
 import filippovajana.mcproject.helper.SystemHelper;
 import filippovajana.mcproject.model.AppFriend;
 import filippovajana.mcproject.model.UserProfile;
@@ -56,7 +49,7 @@ public class RESTService
         SESSION_TOKEN = sessionToken;
     }
 
-    //TODO: Login Task
+    //Login Task
     public String doLogin(String username, String password)
     {
         Call<String> call = apiService.getSessionId(username, password);
