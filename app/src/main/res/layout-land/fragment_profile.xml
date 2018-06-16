@@ -12,22 +12,21 @@
         android:orientation="horizontal">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:paddingTop="@dimen/activity_vertical_margin"
             android:layout_weight="1">
 
             <Button
                 android:id="@+id/logoutButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
+
                 android:background="@null"
                 android:drawableTop="@drawable/ic_exit_to_app_black_24dp"
                 android:text="logout"
-                android:textSize="6dp"/>
+                android:textSize="6sp"/>
 
             <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/circularProfileImage"
@@ -42,23 +41,29 @@
 
             <TextView
                 android:id="@+id/userNameText"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/circularProfileImage"
-                android:gravity="center"
-                android:textSize="24dp"
-                android:textColor="#000000"
-                android:text="Sample User"/>
+                android:layout_centerHorizontal="true"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingEnd="@dimen/activity_horizontal_margin"
+
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textColor="#000000"/>
 
             <TextView
                 android:id="@+id/userMessageText"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/userNameText"
-                android:gravity="center"
-                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                android:layout_centerHorizontal="true"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingEnd="@dimen/activity_horizontal_margin"
+
+                android:textAlignment="center"
                 android:scrollHorizontally="false"
-                android:text="sample text"/>
+                android:textSize="16sp"/>
 
         </RelativeLayout>
 
@@ -66,11 +71,10 @@
             android:id="@+id/mapView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_margin="@dimen/activity_vertical_margin">
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_weight="1">
         </com.google.android.gms.maps.MapView>
 
     </LinearLayout>
-
 
 </android.support.design.widget.CoordinatorLayout>
