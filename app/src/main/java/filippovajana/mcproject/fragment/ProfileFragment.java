@@ -182,7 +182,7 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback, OnC
         Thread logoutTask = new Thread(() ->
         {
             RESTService rest = new RESTService();
-            boolean result = rest.logoutUser();
+            boolean result = rest.logoutUserCall();
 
             if (result == true)
             {

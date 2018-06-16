@@ -2,7 +2,6 @@ package filippovajana.mcproject.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -107,7 +106,7 @@ public class FriendAddFragment extends Fragment
         {
             //call rest api
             RESTService rest = new RESTService();
-            UsersListResponse respose = rest.getUsers(prefix, Integer.MAX_VALUE);
+            UsersListResponse respose = rest.getUsersCall(prefix, Integer.MAX_VALUE);
 
             if (respose != null)
                 SystemHelper.showSnackbar("Loading...");
@@ -152,7 +151,7 @@ public class FriendAddFragment extends Fragment
             try
             {
 
-                FollowUserResponse response = rest.followUser(username);
+                FollowUserResponse response = rest.followUserCall(username);
 
                 SystemHelper.showSnackbar(response.message);
             }catch (Exception e)

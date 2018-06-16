@@ -90,7 +90,7 @@ public class RESTService
 
 
     //Friends Task
-    public List<AppFriend> getFriendsList()
+    public List<AppFriend> getFriendsListCall()
     {
         //get session id
         String sessioId = getSessionToken();
@@ -124,7 +124,7 @@ public class RESTService
 
 
     //Users Task
-    public UsersListResponse getUsers(String prefix, int limit)
+    public UsersListResponse getUsersCall(String prefix, int limit)
     {
         //build rest call
         Call<UsersListResponse> call = apiService.getUsers(
@@ -157,7 +157,7 @@ public class RESTService
 
     //Profile Task
     @Nullable
-    public UserProfile getUserProfile()
+    public UserProfile getUserProfileCall()
     {
         //get session id
         String sessioId = getSessionToken();
@@ -172,18 +172,18 @@ public class RESTService
 
             if (response.isSuccessful())
             {
-                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "getUserProfile Successful");
+                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "getUserProfileCall Successful");
                 return response.body();
             }
             else
             {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "getUserProfile Failed");
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "getUserProfileCall Failed");
                 return null;
             }
 
         }catch (Exception e)
         {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "getUserProfile Exception ");
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "getUserProfileCall Exception ");
             e.printStackTrace();
             return null;
         }
@@ -191,7 +191,7 @@ public class RESTService
 
 
     //Status Task
-    public void updateUserStatus(UserProfile profile)
+    public void updateUserStatusCall(UserProfile profile)
     {
         //get query parameters
         String sessioId = getSessionToken();
@@ -213,18 +213,18 @@ public class RESTService
 
             if (response.isSuccessful())
             {
-                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "updateUserStatus Successful");
+                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "updateUserStatusCall Successful");
                 return;
             }
             else
             {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "updateUserStatus Failed");
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "updateUserStatusCall Failed");
                 return;
             }
 
         }catch (Exception e)
         {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "updateUserStatus Exception ");
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "updateUserStatusCall Exception ");
             e.printStackTrace();
             return;
         }
@@ -232,7 +232,7 @@ public class RESTService
 
 
     //Logout Task
-    public boolean logoutUser()
+    public boolean logoutUserCall()
     {
         //build rest call
         Call<Void> call = apiService.logoutUser(getSessionToken());
@@ -261,7 +261,7 @@ public class RESTService
     }
 
     //Follow User Task
-    public FollowUserResponse followUser(@NonNull String username)
+    public FollowUserResponse followUserCall(@NonNull String username)
     {
         //build rest call
         Call<String> call = apiService.followUser(getSessionToken(), username);

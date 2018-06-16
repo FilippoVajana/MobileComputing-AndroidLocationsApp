@@ -102,11 +102,11 @@ public class StatusUpdateFragment extends Fragment implements View.OnClickListen
         @Override
         public void onSuccess(Location location)
         {
-            //TODO: add null check
+            //add null check
             if (location == null)
                 return;
 
-            SystemHelper.showSnackbar("Position updated");
+            //SystemHelper.showSnackbar("Position updated");
 
             //update location in user profile
             _userPosition = new LatLng(location.getLatitude(), location.getLongitude());

@@ -2,11 +2,8 @@ package filippovajana.mcproject.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import filippovajana.mcproject.helper.SystemHelper;
-import filippovajana.mcproject.location.LocationManager;
 import filippovajana.mcproject.rest.RESTService;
 
 public class AppDataModel
@@ -43,7 +40,7 @@ public class AppDataModel
         synchronized (_userProfile)
         {
             //update with remote information
-            UserProfile result = _rest.getUserProfile();
+            UserProfile result = _rest.getUserProfileCall();
 
             //check for null result
             if (result == null)
@@ -60,7 +57,7 @@ public class AppDataModel
         synchronized (_userProfile)
         {
             //update remote profile
-            _rest.updateUserStatus(profile);
+            _rest.updateUserStatusCall(profile);
 
             //update local profile
             _userProfile = profile;
@@ -79,7 +76,7 @@ public class AppDataModel
     public void updateFriendsList()
     {
         //call rest API
-        List<AppFriend> list = _rest.getFriendsList();
+        List<AppFriend> list = _rest.getFriendsListCall();
 
         //update list
         synchronized (_friendsList)
