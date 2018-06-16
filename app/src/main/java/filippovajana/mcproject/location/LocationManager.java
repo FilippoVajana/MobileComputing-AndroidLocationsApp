@@ -139,8 +139,9 @@ public class LocationManager
                         ResolvableApiException resolvable = (ResolvableApiException) e;
                         resolvable.startResolutionForResult(_fragment.getActivity(),
                                 1000);
-                    } catch (IntentSender.SendIntentException sendEx)
+                    } catch (Exception ex)
                     {
+                        SystemHelper.logError(this.getClass(), ex.getMessage());
                         // Ignore the error.
                     }
                 }
