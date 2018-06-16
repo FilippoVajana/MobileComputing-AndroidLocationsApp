@@ -1,6 +1,7 @@
 package filippovajana.mcproject.location;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -39,7 +40,7 @@ public class LocationManager
 
     //location service
     private LocationRequest _locationRequest;
-    private static FusedLocationProviderClient _locationProvider;
+    private FusedLocationProviderClient _locationProvider;
 
     //user location
     private static Location _userLocation;
@@ -50,31 +51,15 @@ public class LocationManager
         _fragment = fragment;
 
         //init map
-        _map = map;
-        setMapDefaults();
+        if (map != null)
+        {
+            _map = map;
+            setMapDefaults();
+        }
 
         //init location provider
-        _locationProvider = LocationServices.getFusedLocationProviderClient(_fragment.getContext());
-
-        //check for permissions
-        boolean locationGranted = checkLocationPermission();
-        if (locationGranted == false)
-            requestLocationPermissions();
-
-        //check location settings
-        setLocationRequestDefaults();
-
-        //get user location
-        getUserLocation(null, null);
-    }
-
-    public LocationManager(Fragment fragment)
-    {
-        //init fragment
-        _fragment = fragment;
-
-        //init location provider
-        _locationProvider = LocationServices.getFusedLocationProviderClient(_fragment.getContext());
+        Context context = _fragment.getContext();
+        _locationProvider = LocationServices.getFusedLocationProviderClient(context);
 
         //check for permissions
         boolean locationGranted = checkLocationPermission();
