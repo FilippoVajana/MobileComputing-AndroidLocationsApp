@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity
         }
         else
         {
-            //TODO: check load on back button press
             _fragmentHelper.loadFragment(_lastFragment);
         }
     }
@@ -79,9 +78,9 @@ public class MainActivity extends AppCompatActivity
 
     private void setupBottomNavigationView()
     {
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomMenu);
+        BottomNavigationView bottomNav = findViewById(R.id.bottomMenu);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(
+        bottomNav.setOnNavigationItemSelectedListener(
                 item ->
                 {
                     switch (item.getItemId())
