@@ -11,11 +11,19 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="@dimen/activity_vertical_margin"
             android:layout_weight="1">
+
+
+
+        <RelativeLayout
+            android:id="@+id/profileInfoPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            >
 
             <Button
                 android:id="@+id/logoutButton"
@@ -32,7 +40,7 @@
                 android:id="@+id/circularProfileImage"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:src="@drawable/ic_person_black_24dp"
+                android:src="@drawable/ic_heisenberg_icon"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 app:civ_shadow="true"
@@ -66,6 +74,8 @@
                 android:textSize="16sp"/>
 
         </RelativeLayout>
+
+        </ScrollView>
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"
