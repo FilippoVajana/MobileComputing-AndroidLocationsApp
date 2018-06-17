@@ -6,24 +6,27 @@
     android:layout_height="match_parent"
     android:tag="Profile Fragment">
 
-    <Button
-        android:id="@+id/logoutButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|top"
-        android:drawableTop="@drawable/ic_exit_to_app_black_24dp"
-        android:text="logout"
-        android:textSize="6sp"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/activity_vertical_margin">
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/logoutButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+
+                android:background="@null"
+                android:drawableTop="@drawable/ic_exit_to_app_black_24dp"
+                android:text="logout"
+                android:textSize="6sp"/>
 
             <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/circularProfileImage"
@@ -33,7 +36,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 app:civ_shadow="true"
-                app:civ_shadow_radius="5"
+                app:civ_shadow_radius="10"
                 app:civ_shadow_color="@color/accent"/>
 
             <TextView
@@ -61,16 +64,17 @@
                 android:textAlignment="center"
                 android:scrollHorizontally="false"
                 android:textSize="16sp"/>
+
         </RelativeLayout>
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/activity_vertical_margin">
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_weight="1">
         </com.google.android.gms.maps.MapView>
 
     </LinearLayout>
-
 
 </android.support.design.widget.CoordinatorLayout>
