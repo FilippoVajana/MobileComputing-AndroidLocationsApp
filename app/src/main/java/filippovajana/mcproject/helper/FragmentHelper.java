@@ -32,7 +32,6 @@ public class FragmentHelper
     private FragmentManager _manager;
     private FrameLayout _container;
 
-    private static FragmentHelper _instance = null;
     public FragmentHelper(FragmentManager manager, FrameLayout container)
     {
         SystemHelper.logWarning(FragmentHelper.class, "Initialize FragmentHelper");
@@ -78,5 +77,10 @@ public class FragmentHelper
         {
             SystemHelper.logError(FragmentHelper.class, String.format("%s Already Loaded", fragmentTag));
         }
+    }
+
+    public static void clearNavigationStack()
+    {
+        loadedFragment = null;
     }
 }

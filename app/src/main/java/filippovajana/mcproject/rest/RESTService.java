@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import filippovajana.mcproject.activity.LoginActivity;
+import filippovajana.mcproject.helper.FragmentHelper;
 import filippovajana.mcproject.helper.SystemHelper;
 import filippovajana.mcproject.model.AppFriend;
 import filippovajana.mcproject.model.UserProfile;
@@ -242,6 +243,9 @@ public class RESTService
                 //clear session token
                 SESSION_TOKEN = new String();
                 LoginActivity.clearSharedPreferences();
+
+                //clear navigation stack
+                FragmentHelper.clearNavigationStack();
 
                 SystemHelper.logWarning(this.getClass(), "Logout successful");
                 return true;
