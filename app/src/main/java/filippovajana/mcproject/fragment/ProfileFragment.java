@@ -189,6 +189,7 @@ public class ProfileFragment extends Fragment implements OnMapReadyCallback, OnC
                 //navigate to login page
                 Intent intent = new Intent(this.getActivity(), LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 this.getActivity().finish();
             }
