@@ -25,22 +25,28 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/activity_vertical_margin">
 
-            <com.mikhaellopez.circularimageview.CircularImageView
+            <ImageView
+                android:id="@+id/profileImage"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/ic_profile_icon_2"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"/>
+
+            <!--<com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/circularProfileImage"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:src="@drawable/ic_person_black_24dp"
+                android:src="@drawable/ic_profile_icon"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                app:civ_shadow="true"
-                app:civ_shadow_radius="5"
-                app:civ_shadow_color="@color/accent"/>
+                android:layout_centerHorizontal="true"/>-->
 
             <TextView
                 android:id="@+id/userNameText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/circularProfileImage"
+                android:layout_below="@id/profileImage"
                 android:layout_centerHorizontal="true"
                 android:paddingStart="@dimen/activity_horizontal_margin"
                 android:paddingEnd="@dimen/activity_horizontal_margin"

@@ -34,7 +34,7 @@ public class AppFriendAdapter extends ArrayAdapter<AppFriend>
     {
         View listItem = convertView;
         if(listItem == null)
-            listItem = LayoutInflater.from(_context).inflate(R.layout.friend_list_item,parent,false);
+            listItem = LayoutInflater.from(_context).inflate(R.layout.user_info_list_item,parent,false);
 
         //get item
         AppDataModel model = AppDataModel.getInstance();
