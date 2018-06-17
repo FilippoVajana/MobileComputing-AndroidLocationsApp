@@ -3,19 +3,20 @@ package filippovajana.mcproject.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import filippovajana.mcproject.R;
+import filippovajana.mcproject.helper.SystemHelper;
 import filippovajana.mcproject.rest.RESTService;
 
 public class LoginActivity extends AppCompatActivity
 {
+    private static SharedPreferences _sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -28,26 +29,18 @@ public class LoginActivity extends AppCompatActivity
     {
         super.onStart();
 
-
-        //disable login button
-        Button loginButton = findViewById(R.id.userLoginButton);
-        loginButton.setEnabled(false);
-
         //check stored session token
-        boolean isValid = checkStoredSessionToken();
+        boolean isValid = checkValidSessionToken();
         if (isValid)
             navigateToMainActivity();
-        else
-            //enable login button
-            loginButton.setEnabled(true);
     }
 
-    private boolean checkStoredSessionToken()
+    private boolean checkValidSessionToken()
     {
         //get stored token
         String token = getStoredSessionToken();
 
-        if (token == null) //not stored | logout done
+        if (token.isEmpty()) //not stored | logout done
             return false; //do login procedure
         else //jump login procedure
         {
@@ -59,8 +52,14 @@ public class LoginActivity extends AppCompatActivity
 
     private String getStoredSessionToken()
     {
-        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
-        return sharedPreferences.getString(getString(R.string.store_session_token), null);
+        //init shared preferences
+        _sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+
+        //DEBUG
+        clearSharedPreferences();
+
+
+        return _sharedPreferences.getString(getString(R.string.store_session_token), null);
     }
 
     private boolean setStoredSessionToken(String token)
@@ -77,6 +76,8 @@ public class LoginActivity extends AppCompatActivity
 
     public void userLoginButton_onClick(View view)
     {
+        //close keyboard
+        SystemHelper.closeKeyboard(this, findViewById(R.id.userPasswordText));
         //get username
         EditText usernameText = (EditText) findViewById(R.id.userNameText);
         String username = usernameText.getText().toString();
@@ -89,8 +90,6 @@ public class LoginActivity extends AppCompatActivity
         tryLoginAsync(username, password);
 
     }
-
-    //TODO: login task
     private void tryLoginAsync(String username, String password)
     {
         Thread task = new Thread(() -> {
@@ -114,6 +113,21 @@ public class LoginActivity extends AppCompatActivity
 
         //run task
         task.start(); //wait completion???
+    }
+
+    public static SharedPreferences getSharedPreferences()
+    {
+        return _sharedPreferences;
+    }
+
+    public static void clearSharedPreferences()
+    {
+        if (_sharedPreferences == null)
+            return;
+
+        SharedPreferences.Editor prefEditor = _sharedPreferences.edit();
+        prefEditor.putString("SESSION_TOKEN", new String());
+        prefEditor.commit();
     }
 
     public void showSnackbar(String message)

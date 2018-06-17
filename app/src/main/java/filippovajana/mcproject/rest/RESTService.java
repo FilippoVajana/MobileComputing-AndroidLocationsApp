@@ -1,5 +1,6 @@
 package filippovajana.mcproject.rest;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import filippovajana.mcproject.activity.LoginActivity;
 import filippovajana.mcproject.helper.SystemHelper;
 import filippovajana.mcproject.model.AppFriend;
 import filippovajana.mcproject.model.UserProfile;
@@ -23,20 +25,20 @@ public class RESTService
 
     private static String SESSION_TOKEN;
 
-    private static Retrofit retrofit;
-    private static EverywareLabAPI apiService;
+    private static Retrofit RETROFIT;
+    private static EverywareLabAPI API_SERVICE;
 
     public RESTService()
     {
-        //init retrofit
-        retrofit = new Retrofit.Builder()
+        //init RETROFIT
+        RETROFIT = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         //init api service
-        apiService = retrofit.create(EverywareLabAPI.class);
+        API_SERVICE = RETROFIT.create(EverywareLabAPI.class);
     }
 
     public static String getSessionToken()
@@ -52,7 +54,7 @@ public class RESTService
     //Login Task
     public String doLogin(String username, String password)
     {
-        Call<String> call = apiService.getSessionId(username, password);
+        Call<String> call = API_SERVICE.getSessionId(username, password);
 
         //execute call
         try
@@ -89,7 +91,7 @@ public class RESTService
         String sessioId = getSessionToken();
 
         //build rest call
-        Call<FriendsListResponse> call = apiService.getFollowedFriends(sessioId);
+        Call<FriendsListResponse> call = API_SERVICE.getFollowedFriends(sessioId);
 
         //execute call
         try
@@ -120,7 +122,7 @@ public class RESTService
     public UsersListResponse getUsersCall(String prefix, int limit)
     {
         //build rest call
-        Call<UsersListResponse> call = apiService.getUsers(
+        Call<UsersListResponse> call = API_SERVICE.getUsers(
                 getSessionToken(),
                 prefix,
                 limit);
@@ -156,7 +158,7 @@ public class RESTService
         String sessioId = getSessionToken();
 
         //build rest call
-        Call<UserProfile> call = apiService.getUserProfile(sessioId);
+        Call<UserProfile> call = API_SERVICE.getUserProfile(sessioId);
 
         //execute call
         try
@@ -193,7 +195,7 @@ public class RESTService
         String longitude = String.valueOf(profile.get_longitude());
 
         //build rest call
-        Call<Void> call = apiService.updateUserStatus(
+        Call<Void> call = API_SERVICE.updateUserStatus(
                 sessioId,
                 message,
                 latitude,
@@ -228,7 +230,7 @@ public class RESTService
     public boolean logoutUserCall()
     {
         //build rest call
-        Call<Void> call = apiService.logoutUser(getSessionToken());
+        Call<Void> call = API_SERVICE.logoutUser(getSessionToken());
 
         //execute call
         try
@@ -237,6 +239,10 @@ public class RESTService
 
             if (response.isSuccessful())
             {
+                //clear session token
+                SESSION_TOKEN = new String();
+                LoginActivity.clearSharedPreferences();
+
                 SystemHelper.logWarning(this.getClass(), "Logout successful");
                 return true;
             }
@@ -257,7 +263,7 @@ public class RESTService
     public FollowUserResponse followUserCall(@NonNull String username)
     {
         //build rest call
-        Call<String> call = apiService.followUser(getSessionToken(), username);
+        Call<String> call = API_SERVICE.followUser(getSessionToken(), username);
 
         //execute call
         try
