@@ -43,12 +43,12 @@ public class RESTService
     {
         return SESSION_TOKEN;
     }
-
     public static void setSessionToken(String sessionToken)
     {
         SESSION_TOKEN = sessionToken;
     }
 
+    
     //Login Task
     public String doLogin(String username, String password)
     {
