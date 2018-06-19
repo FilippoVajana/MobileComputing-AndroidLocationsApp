@@ -13,18 +13,20 @@ import java.util.List;
 
 import filippovajana.mcproject.R;
 import filippovajana.mcproject.adapter.AppFriendAdapter;
+import filippovajana.mcproject.adapter.ListItemAdapter;
 import filippovajana.mcproject.helper.SystemHelper;
 import filippovajana.mcproject.location.LocationManager;
 import filippovajana.mcproject.location.UserLocationUpdateListener;
 import filippovajana.mcproject.model.AppDataModel;
 import filippovajana.mcproject.model.AppFriend;
+import filippovajana.mcproject.model.ListItemInterface;
 import filippovajana.mcproject.model.RestaurantProfile;
 
 public class FriendsListFragment extends Fragment implements UserLocationUpdateListener
 {
     //view
     View _view;
-    AppFriendAdapter _listAdapter;
+    ListItemAdapter _listAdapter;
 
     //data model
     AppDataModel _dataModel;
@@ -61,7 +63,7 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
         updateItemsListAsync();
 
         //set ListView adapter
-        setFriendsListAdapter();
+        setItemsListAdapter();
 
         //set on user location update event handler
         _location.setUserLocationUpdateListener(this);
@@ -70,27 +72,29 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
 
 
 
-
-
-    //TODO: use common interface
+    //TODO: ESAME
     private void updateItemsListAsync()
     {
         //build task
         Thread updateThread = new Thread(() ->
         {
-            //update list
+            //update friends list
             _dataModel.updateFriendsList();
-            ArrayList<AppFriend> list = _dataModel.get_friendsList();
+            ArrayList<AppFriend> friendsList = _dataModel.get_friendsList();
 
-            //TODO: check
+            //update restaurants list
             _dataModel.updateRestaurantsList();
             ArrayList<RestaurantProfile> restaurantsList = _dataModel.get_restaurantsList();
 
+
+            //get merged list
+            ArrayList<ListItemInterface> mergedList = _dataModel.mergeLists(friendsList, restaurantsList);
+
             //set distance to user
-            setDistanceToUser(list);
+            setDistanceToUser(mergedList);
 
             //sort list by distance
-            sortByDistance(list);
+            sortByDistance(mergedList);
 
 
             //notify list adapter
@@ -111,24 +115,24 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
     }
 
 
-    //TODO: use common interface
-    private void setFriendsListAdapter()
+    //TODO: ESAME
+    private void setItemsListAdapter()
     {
-        ArrayList<AppFriend> list = _dataModel.get_friendsList();
+        ArrayList<ListItemInterface> list = _dataModel.getMergedList();
 
         //build list adapter
-        _listAdapter = new AppFriendAdapter(this.getActivity(), list);
+        _listAdapter = new ListItemAdapter(this.getActivity(), list);
 
         //set list adapter
         ListView listView = _view.findViewById(R.id.friendsListView);
         listView.setAdapter(_listAdapter);
 
         //show list size snackbar
-        SystemHelper.showSnackbar(String.format("%d Friends", _dataModel.get_friendsList().size()));
+        SystemHelper.showSnackbar(String.format("%d Items", _dataModel.get_friendsList().size()));
     }
 
 
-    private void setDistanceToUser(List<AppFriend> list)
+    private void setDistanceToUser(List<ListItemInterface> list)
     {
         if (list == null)
             return;
@@ -137,20 +141,20 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
         synchronized (list)
         {
             //compute distances
-            for (AppFriend f : list)
+            for (ListItemInterface item : list)
             {
-                f.setDistanceToUser(_location.getDistanceFromUser(f));
+                item.setDistanceToUser(_location.getDistanceFromUser(item));
             }
         }
     }
 
-    private void sortByDistance(List<AppFriend> list)
+    private void sortByDistance(List<ListItemInterface> list)
     {
         if (list == null)
             return;
 
         //sort list by distance
-        list.sort((Comparator<AppFriend>) (item1, item2) -> {
+        list.sort((Comparator<ListItemInterface>) (item1, item2) -> {
             //less
             if (item1.getDistanceToUser() < item2.getDistanceToUser())
                 return -1;

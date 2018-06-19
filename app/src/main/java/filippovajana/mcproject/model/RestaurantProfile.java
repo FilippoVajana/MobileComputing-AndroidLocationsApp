@@ -16,6 +16,8 @@ public class RestaurantProfile implements ListItemInterface
     @SerializedName("lon")
     private float longitude;
 
+    private float _distanceToUser;
+
     public String getName()
     {
         return name;
@@ -56,10 +58,21 @@ public class RestaurantProfile implements ListItemInterface
     }
 
 
-
     @Override
     public boolean isUser()
     {
         return false;
+    }
+
+    @Override
+    public float getDistanceToUser()
+    {
+        return _distanceToUser;
+    }
+
+    @Override
+    public void setDistanceToUser(float distance)
+    {
+        _distanceToUser = distance;
     }
 }

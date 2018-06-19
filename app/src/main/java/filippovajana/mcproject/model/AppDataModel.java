@@ -22,6 +22,7 @@ public class AppDataModel
         _rest = new RESTService();
 
         //init fields
+        _mergedList = new ArrayList<>();
         _friendsList = new ArrayList<>();
         _restaurantsList = new ArrayList<>();
         _userProfile = new UserProfile();
@@ -95,7 +96,7 @@ public class AppDataModel
             }
         }
     }
-    public AppFriend getItem(int position)
+    public AppFriend getFriend(int position)
     {
         synchronized (_friendsList)
         {
@@ -103,10 +104,11 @@ public class AppDataModel
         }
     }
 
-    //ESAME
+
+
+    //TODO: ESAME
     //Restaurants
     private ArrayList<RestaurantProfile> _restaurantsList;
-
     public ArrayList<RestaurantProfile> get_restaurantsList()
     {
         synchronized (_restaurantsList)
@@ -114,7 +116,6 @@ public class AppDataModel
             return _restaurantsList;
         }
     }
-
     public void updateRestaurantsList()
     {
         //call rest API
@@ -135,5 +136,42 @@ public class AppDataModel
             }
         }
 
+    }
+
+    private ArrayList<ListItemInterface> _mergedList;
+    public ArrayList<ListItemInterface> mergeLists(ArrayList<AppFriend> friendsList, ArrayList<RestaurantProfile> restaurantsList)
+    {
+        ArrayList<ListItemInterface> list = new ArrayList<ListItemInterface>();
+
+        synchronized (_friendsList)
+        {
+            list.addAll(friendsList);
+        }
+
+        synchronized (_restaurantsList)
+        {
+            list.addAll(restaurantsList);
+        }
+
+        //set list
+        setMergedList(list);
+
+        return list;
+    }
+
+    public ArrayList<ListItemInterface> getMergedList()
+    {
+        synchronized (_mergedList)
+        {
+            return _mergedList;
+        }
+    }
+
+    public void setMergedList(ArrayList<ListItemInterface> list)
+    {
+        synchronized (list)
+        {
+            this._mergedList = list;
+        }
     }
 }
