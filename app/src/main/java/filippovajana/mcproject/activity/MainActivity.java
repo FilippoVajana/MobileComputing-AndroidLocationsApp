@@ -1,17 +1,23 @@
 package filippovajana.mcproject.activity;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.CheckBox;
 
 import filippovajana.mcproject.R;
 import filippovajana.mcproject.helper.FragmentHelper;
 import filippovajana.mcproject.helper.SystemHelper;
+import filippovajana.mcproject.model.AppDataModel;
 
 
 public class MainActivity extends AppCompatActivity
 {
+    private SharedPreferences _preferences;
+
     public MainActivity(){}
 
     @Override
@@ -34,6 +40,11 @@ public class MainActivity extends AppCompatActivity
     {
         super.onStart();
         SystemHelper.logError(this.getClass(), "onStart()");
+
+        //TODO:ESAME
+        _preferences = this.getPreferences(MODE_PRIVATE);
+        //set ads permission
+        setAdsPermission();
 
         //init fragment helper
         _fragmentHelper = new FragmentHelper(this.getSupportFragmentManager(), findViewById(R.id.fragment_container));
@@ -96,8 +107,54 @@ public class MainActivity extends AppCompatActivity
                             break;
                         case R.id.action_friends_list:
                             _fragmentHelper.loadFragment(FragmentHelper.Fragments.FRIENDS);
+                            break;
+                        case R.id.action_settings:
+                            _fragmentHelper.loadFragment(FragmentHelper.Fragments.SETTINGS);
                     }
                     return true;
                 });
     }
+
+
+    //TODO: ESAME
+    public void onAllowAdsCheckboxClicked(View view)
+    {
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
+
+        // Check which checkbox was clicked
+        switch(view.getId())
+        {
+            case R.id.allowAdsCheckBox:
+                if (checked)
+                {
+                    // save user preference
+                    SharedPreferences.Editor editor = _preferences.edit();
+                    editor.putBoolean("ALLOW_ADS", true);
+                    editor.commit();
+
+                    setAdsPermission();
+                }
+                else
+                {
+                    // save user preference
+                    SharedPreferences.Editor editor = _preferences.edit();
+                    editor.putBoolean("ALLOW_ADS", false);
+                    editor.commit();
+
+                    setAdsPermission();
+                }
+
+
+        }
+    }
+
+    private void setAdsPermission()
+    {
+        boolean allow_ads = _preferences.getBoolean("ALLOW_ADS", false);
+
+        AppDataModel.getInstance().adsAllowed = allow_ads;
+    }
+
+
 }

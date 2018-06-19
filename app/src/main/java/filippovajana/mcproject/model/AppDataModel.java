@@ -174,4 +174,6 @@ public class AppDataModel
             this._mergedList = list;
         }
     }
+
+    public boolean adsAllowed = false;
 }

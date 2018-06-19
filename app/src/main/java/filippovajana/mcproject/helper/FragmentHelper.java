@@ -13,12 +13,13 @@ import filippovajana.mcproject.fragment.FriendsFragment;
 import filippovajana.mcproject.fragment.FriendsListFragment;
 import filippovajana.mcproject.fragment.FriendsMapFragment;
 import filippovajana.mcproject.fragment.ProfileFragment;
+import filippovajana.mcproject.fragment.SettingsFragment;
 import filippovajana.mcproject.fragment.StatusUpdateFragment;
 
 public class FragmentHelper
 {
     //app fragments dictionary
-    public enum Fragments {PROFILE, STATUS, ADD, FRIENDS, LIST, MAP}
+    public enum Fragments {PROFILE, STATUS, ADD, FRIENDS, LIST, MAP, SETTINGS}
     private Hashtable<Fragments, Fragment> _fragmentDictionary = new Hashtable()
     {{
         put(Fragments.PROFILE, new ProfileFragment());
@@ -27,6 +28,7 @@ public class FragmentHelper
         put(Fragments.FRIENDS, new FriendsFragment());
         put(Fragments.LIST, new FriendsListFragment());
         put(Fragments.MAP, new FriendsMapFragment());
+        put(Fragments.SETTINGS, new SettingsFragment());
     }};
 
     private FragmentManager _manager;

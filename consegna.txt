@@ -1,0 +1,36 @@
+Funzionalità
+
+#1 - IMPLEMENTATA
+sono stati modificati alcuni file all'interno del package "rest".
+in particolare è stato aggiunto l'endpoint del servizio
+ed aggiunto un metodo di chiamata per usufruire del servizio.
+Per le chiate REST si utilizza la libreria Retrofit
+
+
+#2 - IMPLEMENTATA
+Per riciclare la maggior parte del codice si è creata una interfaccia
+comune ListItemInterface che gli oggetti AppFriend e RestaurantProfile implementano.
+Aggiunto anche un ArrayAdapter e metodi dedicati nella classe AppDataModel
+
+
+#3 - IMPLEMENTATA
+Sfruttando l'implementazione precedente è stato aggiunto un semplice controllo
+in fase di creazione dei markers per distinguere amici (ROSSO) e ristoranti (BLU) in base al colore
+
+
+#4 - IMPLEMENTATA
+Funzionalità implementata sfruttando la classe SharedPreferences.
+Il'impostazione dei permessi è memorizzata senza distinzione di utente.
+Affinchè un cambio di impostazione sia effettivo può essere necessario ritornare sulla schermata
+principale
+
+
+#DATI DI TEST
+// utente principale di sviluppo (segue tutti)
+fv:fv
+
+// utenti secondari
+fv_test1:fv1 (45.454564, 9.218297)
+fv_test2:fv2 (45.453224, 9.217010)
+fv_test3:fv3 (45.448273, 9.189995)
+fv_test4:fv4 (45.486786, 9.207054)

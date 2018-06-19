@@ -83,9 +83,12 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
             ArrayList<AppFriend> friendsList = _dataModel.get_friendsList();
 
             //update restaurants list
-            _dataModel.updateRestaurantsList();
-            ArrayList<RestaurantProfile> restaurantsList = _dataModel.get_restaurantsList();
-
+            ArrayList<RestaurantProfile> restaurantsList = new ArrayList<>();
+            if (_dataModel.adsAllowed)
+            {
+                _dataModel.updateRestaurantsList();
+                restaurantsList = _dataModel.get_restaurantsList();
+            }
 
             //get merged list
             ArrayList<ListItemInterface> mergedList = _dataModel.mergeLists(friendsList, restaurantsList);
@@ -128,7 +131,7 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
         listView.setAdapter(_listAdapter);
 
         //show list size snackbar
-        SystemHelper.showSnackbar(String.format("%d Items", _dataModel.get_friendsList().size()));
+        SystemHelper.showSnackbar(String.format("%d Items", _dataModel.getMergedList().size()));
     }
 
 

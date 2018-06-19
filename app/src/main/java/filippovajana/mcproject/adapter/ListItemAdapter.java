@@ -69,7 +69,12 @@ public class ListItemAdapter extends ArrayAdapter<ListItemInterface>
         if (item.isUser() == false)
         {
             //change background color
-            listItem.setBackgroundColor(R.style.AppTheme); //TODO:check
+            listItem.setBackgroundColor(Color.LTGRAY); //TODO:check
+        }
+        else
+        {
+            //change background color
+            listItem.setBackgroundColor(Color.TRANSPARENT); //TODO:check
         }
 
         return listItem;
