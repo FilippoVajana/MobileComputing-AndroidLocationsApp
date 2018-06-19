@@ -30,6 +30,7 @@ import java.util.List;
 import filippovajana.mcproject.R;
 import filippovajana.mcproject.helper.SystemHelper;
 import filippovajana.mcproject.model.AppFriend;
+import filippovajana.mcproject.model.ListItemInterface;
 
 public class LocationManager
 {
@@ -207,7 +208,7 @@ public class LocationManager
             return null;
         }
     }
-    public float getDistanceFromUser(AppFriend friend)
+    public float getDistanceFromUser(ListItemInterface item)
     {
         //get user location
         if (_userLocation == null)
@@ -216,8 +217,8 @@ public class LocationManager
         double uLon = _userLocation.getLongitude();
 
         //get friend location
-        double fLat = friend.getLatitude();
-        double fLon = friend.getLongitude();
+        double fLat = item.getLatitude();
+        double fLon = item.getLongitude();
 
         float[] distance = new float[1];
 

@@ -18,6 +18,7 @@ import filippovajana.mcproject.location.LocationManager;
 import filippovajana.mcproject.location.UserLocationUpdateListener;
 import filippovajana.mcproject.model.AppDataModel;
 import filippovajana.mcproject.model.AppFriend;
+import filippovajana.mcproject.model.ListItemInterface;
 import filippovajana.mcproject.model.RestaurantProfile;
 
 public class FriendsListFragment extends Fragment implements UserLocationUpdateListener
@@ -78,19 +79,23 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
         //build task
         Thread updateThread = new Thread(() ->
         {
-            //update list
+            //update friends list
             _dataModel.updateFriendsList();
-            ArrayList<AppFriend> list = _dataModel.get_friendsList();
+            ArrayList<AppFriend> friendsList = _dataModel.get_friendsList();
 
-            //TODO: check
+            //update restaurants list
             _dataModel.updateRestaurantsList();
             ArrayList<RestaurantProfile> restaurantsList = _dataModel.get_restaurantsList();
 
+
+            //TODO: get merged list
+            ArrayList<ListItemInterface> mergedList = _dataModel.mergeLists(friendsList, restaurantsList);
+
             //set distance to user
-            setDistanceToUser(list);
+            setDistanceToUser(mergedList);
 
             //sort list by distance
-            sortByDistance(list);
+            sortByDistance(mergedList);
 
 
             //notify list adapter
@@ -128,7 +133,7 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
     }
 
 
-    private void setDistanceToUser(List<AppFriend> list)
+    private void setDistanceToUser(List<ListItemInterface> list)
     {
         if (list == null)
             return;
@@ -137,20 +142,20 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
         synchronized (list)
         {
             //compute distances
-            for (AppFriend f : list)
+            for (ListItemInterface item : list)
             {
-                f.setDistanceToUser(_location.getDistanceFromUser(f));
+                item.setDistanceToUser(_location.getDistanceFromUser(item));
             }
         }
     }
 
-    private void sortByDistance(List<AppFriend> list)
+    private void sortByDistance(List<ListItemInterface> list)
     {
         if (list == null)
             return;
 
         //sort list by distance
-        list.sort((Comparator<AppFriend>) (item1, item2) -> {
+        list.sort((Comparator<ListItemInterface>) (item1, item2) -> {
             //less
             if (item1.getDistanceToUser() < item2.getDistanceToUser())
                 return -1;

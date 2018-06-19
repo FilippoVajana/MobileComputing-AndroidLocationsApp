@@ -106,7 +106,6 @@ public class AppDataModel
     //ESAME
     //Restaurants
     private ArrayList<RestaurantProfile> _restaurantsList;
-
     public ArrayList<RestaurantProfile> get_restaurantsList()
     {
         synchronized (_restaurantsList)
@@ -114,7 +113,6 @@ public class AppDataModel
             return _restaurantsList;
         }
     }
-
     public void updateRestaurantsList()
     {
         //call rest API
@@ -135,5 +133,23 @@ public class AppDataModel
             }
         }
 
+    }
+
+    public ArrayList<ListItemInterface> mergeLists(ArrayList<AppFriend> friendsList, ArrayList<RestaurantProfile> restaurantsList)
+    {
+        ArrayList<ListItemInterface> list = new ArrayList<ListItemInterface>();
+
+        synchronized (_friendsList)
+        {
+            list.addAll(friendsList);
+        }
+
+        synchronized (_restaurantsList)
+        {
+            list.addAll(restaurantsList);
+        }
+
+
+        return list;
     }
 }

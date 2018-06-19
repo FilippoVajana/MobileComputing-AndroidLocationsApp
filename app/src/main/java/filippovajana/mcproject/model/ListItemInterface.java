@@ -14,5 +14,9 @@ public interface ListItemInterface
     public String getMessage();
     //public void setMessage(String message);
 
+    public float getDistanceToUser();
+    public void setDistanceToUser(float distance);
+
+
     public boolean isUser();
 }
