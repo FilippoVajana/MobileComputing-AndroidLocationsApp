@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class AppFriend
+public class AppFriend implements ListItemInterface
 {
     @SerializedName("username")
     private String username;
@@ -34,12 +34,12 @@ public class AppFriend
         this._distanceToUser = _distanceToUser;
     }
 
-    public String getUsername()
+    public String getName()
     {
         return username;
     }
 
-    public void setUsername(String username)
+    public void setName(String username)
     {
         this.username = username;
     }
@@ -74,5 +74,11 @@ public class AppFriend
     public void setLongitude(float longitude)
     {
         this.longitude = longitude;
+    }
+
+    @Override
+    public boolean isUser()
+    {
+        return true;
     }
 }

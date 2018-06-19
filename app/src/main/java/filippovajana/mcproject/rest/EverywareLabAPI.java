@@ -43,4 +43,9 @@ public interface EverywareLabAPI
     @GET("follow/")
     Call<String> followUser(@Query("session_id") String sessioId,
                             @Query("username") String username);
+
+
+    //ESAME
+    @GET("mrdonaldo/")
+    Call<RestaurantListResponse> getRestaurants(@Query("session_id") String sessionId);
 }

@@ -2,7 +2,6 @@ package filippovajana.mcproject.location;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -237,7 +236,7 @@ public class LocationManager
             LatLng position = new LatLng(f.getLatitude(), f.getLongitude());
             MarkerOptions opt = new MarkerOptions()
                     .position(position)
-                    .title(f.getUsername())
+                    .title(f.getName())
                     .snippet(f.getMessage());
             _map.addMarker(opt);
         }

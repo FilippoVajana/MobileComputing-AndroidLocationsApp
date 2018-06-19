@@ -13,6 +13,7 @@ import filippovajana.mcproject.activity.LoginActivity;
 import filippovajana.mcproject.helper.FragmentHelper;
 import filippovajana.mcproject.helper.SystemHelper;
 import filippovajana.mcproject.model.AppFriend;
+import filippovajana.mcproject.model.RestaurantProfile;
 import filippovajana.mcproject.model.UserProfile;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -289,6 +290,45 @@ public class RESTService
         {
             SystemHelper.logError(this.getClass(), String.format("Follow user %s", e.getMessage()));
             return null;
+        }
+    }
+
+
+    //ESAME
+    //Restaurants Task
+    public List<RestaurantProfile> getRestaurantsCall()
+    {
+        //get session id
+        String sessioId = getSessionToken();
+
+        //build rest call
+        Call<RestaurantListResponse> call = API_SERVICE.getRestaurants(sessioId);
+
+        //execute call
+        try
+        {
+            Response<RestaurantListResponse> response = call.execute();
+
+            if (response.isSuccessful())
+            {
+                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "getRestaurantsList Successful");
+
+                List<RestaurantProfile> list = response.body().getRestaurantList();
+                SystemHelper.logError(this.getClass(), String.format("%d Restaurants Loaded", list.size()).toUpperCase());
+
+                return list;
+            }
+            else
+            {
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "getRestaurantsList Failed");
+                throw new Exception(response.errorBody().toString());
+            }
+
+        }catch (Exception e)
+        {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "getRestaurantsList Exception ");
+            e.printStackTrace();
+            return new ArrayList<>();
         }
     }
 }
