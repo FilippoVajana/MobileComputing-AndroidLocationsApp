@@ -18,6 +18,7 @@ import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -230,15 +231,26 @@ public class LocationManager
 
 
     //Markers
-    public void drawUsersMarkers(List<AppFriend> friendList)
+    public void drawUsersMarkers(List<ListItemInterface> itemsList)
     {
-        for (AppFriend f : friendList)
+        for (ListItemInterface item : itemsList)
         {
-            LatLng position = new LatLng(f.getLatitude(), f.getLongitude());
-            MarkerOptions opt = new MarkerOptions()
-                    .position(position)
-                    .title(f.getName())
-                    .snippet(f.getMessage());
+            LatLng position = new LatLng(item.getLatitude(), item.getLongitude());
+            MarkerOptions opt = new MarkerOptions();
+            if (item.isUser())
+            {
+                opt.position(position)
+                   .title(item.getName())
+                   .snippet(item.getMessage());
+            }
+            else
+            {
+                opt.position(position)
+                        .title(item.getName())
+                        .snippet(String.format("solo per oggi sconto del %s%%", item.getMessage()))
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+            }
+
             _map.addMarker(opt);
         }
     }
@@ -252,7 +264,7 @@ public class LocationManager
             _map.animateCamera(CameraUpdateFactory.zoomTo(5), 4000, null); //zoom in
             }, null);
     }
-    public void setCameraBounds(List<AppFriend> friendList)
+    public void setCameraBounds(List<ListItemInterface> itemsList)
     {
         //check for MapView
         if (_map == null)
@@ -266,9 +278,9 @@ public class LocationManager
             builder.include(new LatLng(_userLocation.getLatitude(), _userLocation.getLongitude()));
 
         //include friends position
-        for (AppFriend f : friendList)
+        for (ListItemInterface item : itemsList)
         {
-            builder.include(new LatLng(f.getLatitude(), f.getLongitude()));
+            builder.include(new LatLng(item.getLatitude(), item.getLongitude()));
         }
 
         //build bounds

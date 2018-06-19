@@ -23,6 +23,7 @@ import filippovajana.mcproject.helper.SystemHelper;
 import filippovajana.mcproject.location.LocationManager;
 import filippovajana.mcproject.model.AppDataModel;
 import filippovajana.mcproject.model.AppFriend;
+import filippovajana.mcproject.model.ListItemInterface;
 
 public class FriendsMapFragment extends Fragment implements OnMapReadyCallback
 {
@@ -111,7 +112,7 @@ public class FriendsMapFragment extends Fragment implements OnMapReadyCallback
                 _onPositionUpdateFailureListener.onFailure(new NullPointerException());
 
             //get friends list
-            ArrayList<AppFriend> list = AppDataModel.getInstance().get_friendsList();
+            ArrayList<ListItemInterface> list = AppDataModel.getInstance().getMergedList();
 
             //build a fake friend representing the user position
             AppFriend fakeFriend = new AppFriend();
@@ -119,7 +120,7 @@ public class FriendsMapFragment extends Fragment implements OnMapReadyCallback
             fakeFriend.setLongitude((float)location.getLongitude());
 
             //set camera bounds (friends + user)
-            ArrayList<AppFriend> boundList = new ArrayList<>(list); //friends
+            ArrayList<ListItemInterface> boundList = new ArrayList<>(list); //friends
             boundList.add(fakeFriend); //user
             _locationManager.setCameraBounds(boundList);
 
@@ -138,10 +139,10 @@ public class FriendsMapFragment extends Fragment implements OnMapReadyCallback
         public void onFailure(@NonNull Exception e)
         {
             //get friends list
-            ArrayList<AppFriend> list = AppDataModel.getInstance().get_friendsList();
+            ArrayList<ListItemInterface> list = AppDataModel.getInstance().getMergedList();
 
             //set camera bounds (only friends)
-            ArrayList<AppFriend> boundList = new ArrayList<>(list); //friends
+            ArrayList<ListItemInterface> boundList = new ArrayList<>(list); //friends
             _locationManager.setCameraBounds(boundList);
 
             //draw users markers (only friends)
