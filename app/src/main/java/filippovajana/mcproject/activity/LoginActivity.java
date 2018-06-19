@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity
         //clearSharedPreferences();
 
 
-        return _sharedPreferences.getString(getString(R.string.store_session_token), null);
+        return _sharedPreferences.getString(getString(R.string.store_session_token), new String());
     }
 
     private boolean setStoredSessionToken(String token)
