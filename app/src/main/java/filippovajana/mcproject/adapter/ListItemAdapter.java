@@ -1,6 +1,7 @@
 package filippovajana.mcproject.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -14,18 +15,19 @@ import java.util.List;
 import filippovajana.mcproject.R;
 import filippovajana.mcproject.model.AppDataModel;
 import filippovajana.mcproject.model.AppFriend;
+import filippovajana.mcproject.model.ListItemInterface;
 
-public class AppFriendAdapter extends ArrayAdapter<AppFriend>
+public class ListItemAdapter extends ArrayAdapter<ListItemInterface>
 {
     private Context _context;
-    private List<AppFriend> _friendsList;
+    private List<ListItemInterface> _itemsList;
 
-    public AppFriendAdapter(@NonNull Context context, @NonNull List<AppFriend> list)
+    public ListItemAdapter(@NonNull Context context, @NonNull List<ListItemInterface> list)
     {
         super(context, 0, list);
 
         _context = context;
-        _friendsList = list;
+        _itemsList = list;
     }
 
     @NonNull
@@ -37,24 +39,38 @@ public class AppFriendAdapter extends ArrayAdapter<AppFriend>
             listItem = LayoutInflater.from(_context).inflate(R.layout.user_info_list_item,parent,false);
 
         //get item
-        AppDataModel model = AppDataModel.getInstance();
-        AppFriend friend = model.getFriend(position);
+        AppDataModel _model = AppDataModel.getInstance();
+        ListItemInterface item = _model.getMergedList().get(position);
 
-        if (friend == null)
+        if (item == null)
             return listItem;
 
         //set name
         TextView nameText = (TextView) listItem.findViewById(R.id.textView_name);
-        nameText.setText(friend.getName());
+        nameText.setText(item.getName());
 
         //set distance
-        float distanceKm = friend.getDistanceToUser() / 1000;
+        float distanceKm = item.getDistanceToUser() / 1000;
         TextView distanceText = (TextView) listItem.findViewById(R.id.textView_distance);
         distanceText.setText(String.format("%.1f Km", distanceKm));
 
         //set message
         TextView messageText = (TextView) listItem.findViewById(R.id.textView_message);
-        messageText.setText(friend.getMessage());
+        if (item.isUser())
+        {
+            messageText.setText(item.getMessage());
+        }
+        else
+        {
+            messageText.setText(String.format("solo per oggi sconto del %s%%", item.getMessage()));
+        }
+
+        //set background
+        if (item.isUser() == false)
+        {
+            //change background color
+            listItem.setBackgroundColor(Color.BLUE); //TODO:check
+        }
 
         return listItem;
     }

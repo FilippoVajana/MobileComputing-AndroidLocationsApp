@@ -13,6 +13,7 @@ import java.util.List;
 
 import filippovajana.mcproject.R;
 import filippovajana.mcproject.adapter.AppFriendAdapter;
+import filippovajana.mcproject.adapter.ListItemAdapter;
 import filippovajana.mcproject.helper.SystemHelper;
 import filippovajana.mcproject.location.LocationManager;
 import filippovajana.mcproject.location.UserLocationUpdateListener;
@@ -25,7 +26,7 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
 {
     //view
     View _view;
-    AppFriendAdapter _listAdapter;
+    ListItemAdapter _listAdapter;
 
     //data model
     AppDataModel _dataModel;
@@ -62,7 +63,7 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
         updateItemsListAsync();
 
         //set ListView adapter
-        setFriendsListAdapter();
+        setItemsListAdapter();
 
         //set on user location update event handler
         _location.setUserLocationUpdateListener(this);
@@ -71,9 +72,7 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
 
 
 
-
-
-    //TODO: use common interface
+    //TODO: ESAME
     private void updateItemsListAsync()
     {
         //build task
@@ -88,7 +87,7 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
             ArrayList<RestaurantProfile> restaurantsList = _dataModel.get_restaurantsList();
 
 
-            //TODO: get merged list
+            //get merged list
             ArrayList<ListItemInterface> mergedList = _dataModel.mergeLists(friendsList, restaurantsList);
 
             //set distance to user
@@ -116,20 +115,20 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
     }
 
 
-    //TODO: use common interface
-    private void setFriendsListAdapter()
+    //TODO: ESAME
+    private void setItemsListAdapter()
     {
-        ArrayList<AppFriend> list = _dataModel.get_friendsList();
+        ArrayList<ListItemInterface> list = _dataModel.getMergedList();
 
         //build list adapter
-        _listAdapter = new AppFriendAdapter(this.getActivity(), list);
+        _listAdapter = new ListItemAdapter(this.getActivity(), list);
 
         //set list adapter
         ListView listView = _view.findViewById(R.id.friendsListView);
         listView.setAdapter(_listAdapter);
 
         //show list size snackbar
-        SystemHelper.showSnackbar(String.format("%d Friends", _dataModel.get_friendsList().size()));
+        SystemHelper.showSnackbar(String.format("%d Items", _dataModel.get_friendsList().size()));
     }
 
 
