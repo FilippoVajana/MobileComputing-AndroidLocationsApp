@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity
         _sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
 
         //DEBUG
-        clearSharedPreferences();
+        //clearSharedPreferences();
 
 
         return _sharedPreferences.getString(getString(R.string.store_session_token), null);

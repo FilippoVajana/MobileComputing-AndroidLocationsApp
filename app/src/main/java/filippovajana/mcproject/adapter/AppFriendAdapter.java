@@ -45,7 +45,7 @@ public class AppFriendAdapter extends ArrayAdapter<AppFriend>
 
         //set name
         TextView nameText = (TextView) listItem.findViewById(R.id.textView_name);
-        nameText.setText(friend.getUsername());
+        nameText.setText(friend.getName());
 
         //set distance
         float distanceKm = friend.getDistanceToUser() / 1000;

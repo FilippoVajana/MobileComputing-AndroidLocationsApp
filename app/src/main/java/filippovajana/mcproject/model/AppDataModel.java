@@ -23,6 +23,7 @@ public class AppDataModel
 
         //init fields
         _friendsList = new ArrayList<>();
+        _restaurantsList = new ArrayList<>();
         _userProfile = new UserProfile();
     }
 
@@ -87,12 +88,10 @@ public class AppDataModel
             //fill list
             for (AppFriend f : list)
             {
-                //compute distance to user
-
                 _friendsList.add(f);
 
                 //log
-                SystemHelper.logWarning(this.getClass(), String.format("Added %s", f.getUsername()));
+                SystemHelper.logWarning(this.getClass(), String.format("Added %s", f.getName()));
             }
         }
     }
@@ -104,5 +103,37 @@ public class AppDataModel
         }
     }
 
+    //ESAME
+    //Restaurants
+    private ArrayList<RestaurantProfile> _restaurantsList;
 
+    public ArrayList<RestaurantProfile> get_restaurantsList()
+    {
+        synchronized (_restaurantsList)
+        {
+            return _restaurantsList;
+        }
+    }
+
+    public void updateRestaurantsList()
+    {
+        //call rest API
+        List<RestaurantProfile> list = _rest.getRestaurantsCall();
+
+        synchronized (_restaurantsList)
+        {
+            //empty list
+            _restaurantsList.clear();
+
+            //fill list
+            for (RestaurantProfile r : list)
+            {
+                _restaurantsList.add(r);
+
+                //log
+                SystemHelper.logWarning(this.getClass(), String.format("Added %s", r.getName()));
+            }
+        }
+
+    }
 }

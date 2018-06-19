@@ -1,6 +1,5 @@
 package filippovajana.mcproject.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -19,6 +18,7 @@ import filippovajana.mcproject.location.LocationManager;
 import filippovajana.mcproject.location.UserLocationUpdateListener;
 import filippovajana.mcproject.model.AppDataModel;
 import filippovajana.mcproject.model.AppFriend;
+import filippovajana.mcproject.model.RestaurantProfile;
 
 public class FriendsListFragment extends Fragment implements UserLocationUpdateListener
 {
@@ -57,8 +57,8 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
         // Inflate the layout for this fragment
         _view = inflater.inflate(R.layout.fragment_friends_list, container, false);
 
-        //update friends list
-        updateFriendsListAsync();
+        //update view items list
+        updateItemsListAsync();
 
         //set ListView adapter
         setFriendsListAdapter();
@@ -69,7 +69,11 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
     }
 
 
-    private void updateFriendsListAsync()
+
+
+
+    //TODO: use common interface
+    private void updateItemsListAsync()
     {
         //build task
         Thread updateThread = new Thread(() ->
@@ -77,6 +81,10 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
             //update list
             _dataModel.updateFriendsList();
             ArrayList<AppFriend> list = _dataModel.get_friendsList();
+
+            //TODO: check
+            _dataModel.updateRestaurantsList();
+            ArrayList<RestaurantProfile> restaurantsList = _dataModel.get_restaurantsList();
 
             //set distance to user
             setDistanceToUser(list);
@@ -103,7 +111,7 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
     }
 
 
-
+    //TODO: use common interface
     private void setFriendsListAdapter()
     {
         ArrayList<AppFriend> list = _dataModel.get_friendsList();
@@ -161,6 +169,6 @@ public class FriendsListFragment extends Fragment implements UserLocationUpdateL
     public void updateCallback()
     {
         //update
-        updateFriendsListAsync();
+        updateItemsListAsync();
     }
 }
